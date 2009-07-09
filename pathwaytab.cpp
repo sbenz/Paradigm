@@ -196,10 +196,10 @@ void PathwayTab::addInteraction(const string& entity_from,
   addEdge(node_from, node_to, i[2]);
 }
 
-void PathwayTab::addNode(const Node& nodename) {
+void PathwayTab::addNode(Node nodename) {
   if (_nodemap.count(nodename) == 0) {
     map< Node, string > empty;
-    _nodemap[nodename] = _nodemap.size();
+    _nodemap[nodename] = _nodevector.size();
     _nodevector.push_back(nodename);
     _parents[nodename] = empty;
   }
@@ -302,12 +302,19 @@ void PathwayTab::printDaiFactorSection(ostream& to) {
 
 void PathwayTab::generateFactorValues(const Node& child, 
 				      const vector< string >& edge_types,
-				      vector< Real >& outValues) {
+				      vector< Real >& outValues) const {
   /// \todo make this polymorphic based on the entity type and node sub-type
-  string entity_type = _entities[child.first];
+  map< string, string >::const_iterator entity_type_i;
+  entity_type_i = _entities.find(child.first);
+  if (entity_type_i == _entities.end()) {
+    throw "Could not find entity in generateFactorValues";
+  }
+  const string& entity_type = entity_type_i->second;
   pair<string, string> lookup(entity_type, child.second);
-  if (_factorGenLookup.count(lookup) > 0) {
-    FactorGenerator* f = _factorGenLookup[lookup];
+  map< pair<string, string>, FactorGenerator* >::const_iterator fgen_lookup;
+  fgen_lookup = _factorGenLookup.find(lookup);
+  if (fgen_lookup != _factorGenLookup.end()) {
+    FactorGenerator* f = fgen_lookup->second;
     f->generateValues(edge_types, outValues);
   } else {
     _defaultFactorGen->generateValues(edge_types, outValues);
@@ -316,19 +323,20 @@ void PathwayTab::generateFactorValues(const Node& child,
 
 void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
 				  vector< Factor >& outFactors,
-				  vector< MaximizationStep >& outMsteps) {
+				  vector< MaximizationStep >& outMsteps) const{
   vector< vector < SharedParameters::FactorOrientations > > var_orders;
   vector< vector < size_t > > sp_total_dim;
   var_orders.resize(sp.size());
   sp_total_dim.resize(sp.size());
   for (size_t i = 0; i < var_orders.size(); ++i) {
     var_orders[i].resize(sp[i].size());
-    sp_total_dim[i].resize(sp[i].size());
+    sp_total_dim[i] = vector< size_t >(sp[i].size());
   }
 
-  map< Node, map< Node, string > >::iterator child_iter = _parents.begin();
+  map< Node,map< Node,string > >::const_iterator child_iter = _parents.begin();
   for ( ; child_iter != _parents.end(); ++child_iter) {
-    map< Node, string >& pmap = child_iter->second;
+    const Node& child_node = child_iter->first;
+    const map< Node, string >& pmap = child_iter->second;
     
     if (pmap.size() == 0) {
       continue;
@@ -336,23 +344,25 @@ void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
 
     vector< Var > factor_vars;
     factor_vars.reserve(pmap.size() + 1);
-    Var child_var(Var(_nodemap[child_iter->first], VARIABLE_DIMENSION));
+    Var child_var(Var(getNodeIndex(child_node), VARIABLE_DIMENSION));
     factor_vars.push_back(child_var);
 
     vector< string > edge_types;
     edge_types.reserve(pmap.size());
     size_t total_dimension = VARIABLE_DIMENSION;
-    map< Node, string >::iterator p_iter = pmap.begin();
+    map< Node, string >::const_iterator p_iter = pmap.begin();
     for ( ; p_iter != pmap.end(); ++p_iter) {
-      Var parent_var(_nodemap[p_iter->first], VARIABLE_DIMENSION);
+      const Node& parent_node = p_iter->first;
+      const string& edge_type = p_iter->second;
+      Var parent_var(getNodeIndex(parent_node), VARIABLE_DIMENSION);
       factor_vars.push_back(parent_var);
-      edge_types.push_back(p_iter->second);
+      edge_types.push_back(edge_type);
       total_dimension *= VARIABLE_DIMENSION;
     }
     
     vector< Real > factor_vals;
     factor_vals.reserve(total_dimension);
-    generateFactorValues(child_iter->first, edge_types, factor_vals);
+    generateFactorValues(child_node, edge_types, factor_vals);
     assert(factor_vals.size() == total_dimension);
     
     Factor f(factor_vars, factor_vals);
@@ -364,7 +374,7 @@ void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
 	SmallSet< string > eset(edge_types.begin(), edge_types.end(), 
 				edge_types.size());
 	const string& spec_subtype = jit->first;
-	const string& node_subtype = child_iter->first.second;
+	const string& node_subtype = child_node.second;
 	if (spec_subtype == node_subtype
 	    && edge_types.size() == eset.size()
 	    && jit->second == eset) {
@@ -428,4 +438,28 @@ map< long, string > PathwayTab::getOutputNodeMap() {
     }
   }
   return result;
+}
+
+void PathwayTab::dumpNodeIndexMap() const {
+  map< Node, size_t>::const_iterator i = _nodemap.begin();
+  for( ; i != _nodemap.end(); ++i) {
+    const Node& n = i->first;
+    size_t idx = i->second;
+    const Node& nv = _nodevector[idx];
+    cerr << idx << '\t' 
+	 << n.first << '\t' << n.second << '\t' 
+	 << nv.first << '\t' << nv.second << endl;
+  }
+}
+
+
+int PathwayTab::debugPrintParents(size_t node_i) {
+  Node c = _nodevector[node_i];
+  if (_parents.count(c) > 0) {
+    map<Node, string>::iterator i = _parents[c].begin();
+    for (; i != _parents[c].end(); ++i) {
+      cout << _nodemap[i->first] << '\t' << i->first.first << "\t" << i->first.second << '\t' << i->second <<endl;
+    }
+  }
+  return -1;
 }

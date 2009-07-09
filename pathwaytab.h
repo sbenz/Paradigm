@@ -102,11 +102,19 @@ public:
   void addInteraction(const string& entity_from, const string& entity_to, 
 		      const string& interaction);
 
-  void addNode(const pair<string, string>& nodename);
+  void addNode(Node nodename);
+  void addNode(const string& entity, const string& subtype);
   void addEdge(const Node& from, const Node& to, const string& label);
   void getAppropriateEntityNode(const string& entity, const string& species,
 				Node& out_node);
   Node getNode(size_t i) const { return _nodevector[i]; }
+
+  size_t getNodeIndex(const Node& n) const {
+    map< Node, size_t >::const_iterator i = _nodemap.find(n);
+    return i->second;
+  }
+
+  void dumpNodeIndexMap() const;
 
   string getInteraction(size_t child_i, size_t parent_i) const {
     Node c = getNode(child_i);
@@ -126,14 +134,15 @@ public:
 			  const string& node_type,
 			  FactorGenerator* factor_gen);
 
+  int debugPrintParents(size_t node_i);
   void printNodeMap(ostream& to=cout, const string& prefix="# ");
   void printDaiFactorSection(ostream& to=cout);
   void generateFactorValues(const Node& child, 
 			    const vector< string >& edge_types,
-			    vector< Real >& outValues);
+			    vector< Real >& outValues) const;
   void constructFactors(const RunConfiguration::EMSteps& sp,
 			vector< Factor >& outFactors, 
-			vector< MaximizationStep >& outMsteps);
+			vector< MaximizationStep >& outMsteps) const;
   map< long, string > getOutputNodeMap();  
 };
 

@@ -1,13 +1,15 @@
+ifeq (,$(LIBDAIDIR))
+LIBDAIDIR=${HOME}/src/libDAI
+endif
 ifeq (,$(BOOST_DIR))
-BOOST_DIR=/opt/local
+BOOST_DIR=${HOME}/boost
 endif
 
 # Standard include directories
-CCINC=-I${LIBDAIDIR}/include -I$(BOOST_DIR)/include
+CCINC=-I${LIBDAIDIR}/include -I$(BOOST_DIR)/include/boost-1_38
 CPPFLAGS=-O3 -W -Wall -Wextra -fPIC ${CCINC}
 
 LIBDAIFLAGS=-DDAI_WITH_BP -DDAI_WITH_MF -DDAI_WITH_HAK -DDAI_WITH_LC -DDAI_WITH_TREEEP -DDAI_WITH_JTREE -DDAI_WITH_MR -DDAI_WITH_GIBBS
-LIBDAIDIR=${HOME}/src/libDAI
 LIB_DIR=-L${LIBDAIDIR}/lib -L$(BOOST_DIR)/lib
 LIBS=-ldai
 LIBFLAGS=${LIBDAIFLAGS} ${LIB_DIR} ${LIBS}

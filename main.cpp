@@ -43,17 +43,18 @@ inline double log10odds(double post,double prior)
 }
 
 void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
-			      FactorGraph& fg, map<long,string>& activeNodes)
+			      FactorGraph& fg, map<long,string>& activeNodes,
+			      ostream& out)
 {
-  cout << "> " << sampleName;
-  cout << " loglikelihood=" << (sample->logZ() - prior->logZ()) 
+  out << "> " << sampleName;
+  out << " loglikelihood=" << (sample->logZ() - prior->logZ()) 
        << endl;
   for (size_t i = 0; i < fg.nrVars(); ++i)
     {
       const Var& v = fg.var(i);
       if(activeNodes.count(v.label()) == 0)
 	continue;
-      cout << activeNodes[v.label()];
+      out << activeNodes[v.label()];
       Factor priorBelief = prior->belief(v);
       Factor belief = sample->belief(v);
       vector<double> priors;
@@ -70,9 +71,9 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 	  priors.push_back(priorBelief[j]);
 	  posteriors.push_back(belief[j]);
 	}
-      cout << "\t";
+      out << "\t";
       if(beliefEqualOne)
-	cout << "NA";
+	out << "NA";
       else
 	{
 	  double down = log10odds(posteriors[0],priors[0]); 
@@ -80,13 +81,13 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 	  double up = log10odds(posteriors[2],priors[2]); 
 	  
 	  if (nc > down && nc > up) 
-	    cout << "0";
+	    out << "0";
 	  else if (down > up)
-	    cout << (-1.0*down);
+	    out << (-1.0*down);
 	  else
-	    cout << up;				
+	    out << up;				
 	}
-      cout << endl;
+      out << endl;
     }
 }
 
@@ -123,12 +124,13 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
 
 int main(int argc, char *argv[])
 {
-  const char* const short_options = "hp:b:c:e:";
+  const char* const short_options = "hp:b:c:e:o:";
   const struct option long_options[] = {
     { "batch", 0, NULL, 'b' },
     { "config", 0, NULL, 'c' },
     { "pathway", 0, NULL, 'p' },
     { "em", 0, NULL, 'e' },
+    { "output", 0, NULL, 'o' },
     { "help", 0, NULL, 'h' },
     { NULL, 0, NULL, 0 }
   };
@@ -138,6 +140,7 @@ int main(int argc, char *argv[])
   string batchPrefix;
   string configFile;
   string paramsOutputFile;
+  string actOutFile;
 
   // /////////////////////////////////////////////////
   // Read in command line options
@@ -151,8 +154,21 @@ int main(int argc, char *argv[])
     case 'c': configFile = optarg; break;
     case 'p': pathwayFilename = optarg; break;
     case 'e': paramsOutputFile = optarg; break;
+    case 'o': actOutFile = optarg; break;
     }
   } while (next_options != -1);
+
+  ostream* outstream;
+  ofstream outFileStream;
+  if (actOutFile == "") {
+    outstream = &cout;
+  } else {
+    outFileStream.open(actOutFile.c_str());
+    if (!outFileStream.is_open()) {
+      die("couldn't open output file");
+    }
+    outstream = &outFileStream;
+  }
 
   // /////////////////////////////////////////////////
   // Verify that command line options are valid
@@ -230,7 +246,9 @@ int main(int argc, char *argv[])
   EMAlg em(evidence, *prior, msteps, &em_conf);
   while(!em.hasSatisfiedTermConditions()) {
     em.iterate();
-    outputEmInferredParams(cerr, em, pathway);
+    if (VERBOSE) {
+      outputEmInferredParams(cerr, em, pathway);
+    }
   }
   em.run();
 
@@ -251,7 +269,7 @@ int main(int argc, char *argv[])
     clamped->run();
     
     outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG, 
-			     outNodes);
+			     outNodes, *outstream);
 
     delete clamped;
   }
