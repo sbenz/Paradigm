@@ -1,11 +1,12 @@
-LIBDAIDIR ?= ${HOME}/src/libDAI
-BOOST_DIR ?= ${HOME}/boost
-
-BOOST_INCLUDE_POSTFIX ?= include/boost-1_38
-
+ifeq (,$(LIBDAIDIR))
+LIBDAIDIR=${HOME}/src/libDAI
+endif
+ifeq (,$(BOOST_DIR))
+BOOST_DIR=${HOME}/boost
+endif
 
 # Standard include directories
-CCINC=-I${LIBDAIDIR}/include -I$(BOOST_DIR)/${BOOST_INCLUDE_POSTFIX}
+CCINC=-I${LIBDAIDIR}/include -I$(BOOST_DIR)/include/boost-1_38
 CPPFLAGS=-O3 -W -Wall -Wextra -fPIC ${CCINC}
 
 LIBDAIFLAGS=-DDAI_WITH_BP -DDAI_WITH_MF -DDAI_WITH_HAK -DDAI_WITH_LC -DDAI_WITH_TREEEP -DDAI_WITH_JTREE -DDAI_WITH_MR -DDAI_WITH_GIBBS

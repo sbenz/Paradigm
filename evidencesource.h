@@ -12,12 +12,9 @@ using namespace dai;
 
 class EvidenceFactorGen : public FactorGenerator {
 public:
-  Real _epsilon;
-  Real _epsilon0;
+  vector<Real> _params;
 
-  EvidenceFactorGen(Real epsilon=0.01, Real epsilon0=0.2) : 
-    _epsilon(epsilon),
-    _epsilon0(epsilon0) {}
+  EvidenceFactorGen(const PropertySet& p);
   ~EvidenceFactorGen() {}
   
   void generateValues(const vector< string >& edge_types, 
@@ -31,8 +28,6 @@ class EvidenceSource
 private:
   vector<double> cutoffs;
   PropertySet options;
-  double epsilon;
-  double epsilon0;
   string attachPoint;
   string _suffix;
   string _evidenceFile;
@@ -46,8 +41,6 @@ private:
 public:
   /// Default constructor
   EvidenceSource() : cutoffs(), 
-		     epsilon(0.01), 
-		     epsilon0(0.2), 
 		     attachPoint(), 
 		     _suffix(),
 		     _evidenceFile(),
@@ -62,8 +55,6 @@ public:
   /// Copy constructor
   EvidenceSource(const EvidenceSource &x) 
   : cutoffs(x.cutoffs), 
-    epsilon(x.epsilon), 
-    epsilon0(x.epsilon0), 
     attachPoint(x.attachPoint), 
     _suffix(x._suffix),
     _evidenceFile(x._evidenceFile),
@@ -77,8 +68,6 @@ public:
     if (this != &x) {
       cutoffs = x.cutoffs;
       options = x.options;
-      epsilon = x.epsilon;
-      epsilon0 = x.epsilon0;
       attachPoint = x.attachPoint;
       _suffix = x._suffix;
       _evidenceFile = x._evidenceFile;
@@ -95,10 +84,8 @@ public:
 
   void setCutoffs(string discLimits);
   int discCutoffs (float x);  
-  string genFactorString(int nodeID, int state);
 
   void loadFromFile(PathwayTab& p, Evidence& e);
-  void addNodeNumber(int node_number, string name, string type);
 
   const string& evidenceFile() {return _evidenceFile;}
   const vector<string>& sampleNames() {return _sampleNames;}

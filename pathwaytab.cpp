@@ -76,7 +76,7 @@ void readInteractionMap(istream& is,
     vector< string > vals;
     dai::tokenizeString(line, vals);
     if (vals.size() != 4) {
-      throw "Interaction map lines must have 4 entries";
+      THROW("Interaction map lines must have 4 entries");
     }
     string interaction = *vals.begin();
     vals.erase(vals.begin());
@@ -91,7 +91,7 @@ GeneProteinExpressionModel::GeneProteinExpressionModel(istream& is)
     vector<string> vals;
     dai::tokenizeString(line, vals);
     if (vals.size() != 3) {
-      throw "Must have three values per line in central dogma";
+      THROW("Must have three values per line in central dogma");
     }
     _steps.insert(vals[2]);
     _states.insert(vals[0]);
@@ -138,7 +138,7 @@ PathwayTab::PathwayTab(istream& pathway_stream,
     } else if (vals.size() == 3) {
       interaction_lines.push_back(vals);
     } else {
-      throw "Must have either to or three entries per line";
+      THROW("Must have either to or three entries per line");
     }
   }
   vector< vector< string > >::iterator v = entity_lines.begin();
@@ -178,7 +178,7 @@ void PathwayTab::addInteraction(const string& entity_from,
 				const string& entity_to, 
 				const string& interaction) {
   if (_imap.count(interaction) == 0) {
-    throw "Unrecognized interaction type";
+    THROW("Unrecognized interaction type: " + interaction);
   }
   vector< string > i = _imap[interaction];
   assert(i.size() == 3);
@@ -307,7 +307,7 @@ void PathwayTab::generateFactorValues(const Node& child,
   map< string, string >::const_iterator entity_type_i;
   entity_type_i = _entities.find(child.first);
   if (entity_type_i == _entities.end()) {
-    throw "Could not find entity in generateFactorValues";
+    THROW("Could not find entity in generateFactorValues");
   }
   const string& entity_type = entity_type_i->second;
   pair<string, string> lookup(entity_type, child.second);

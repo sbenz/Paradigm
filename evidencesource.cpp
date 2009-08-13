@@ -4,33 +4,60 @@
 
 #define THROW(msg) throw std::runtime_error(msg)
 
+EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params() 
+{
+  _params.reserve(9);
+  if (p.hasKey("factorParams")) {
+    vector<string> paramsStr;
+    Tokenize(p.getStringAs<string>("factorParams"),paramsStr,";");
+    if (paramsStr.size() != 9) {
+      THROW("must have 9 elements in factorParams");
+    }
+    for(size_t i = 0; i < paramsStr.size(); i++)
+    {
+      _params.push_back(atof(paramsStr[i].c_str()));
+    }
+    return;
+  }
+
+  if (!p.hasKey("epsilon") || !p.hasKey("epsilon0")) {
+    cout << "woops" << endl;
+    cout << p << endl;
+    THROW("must specify either factorParams, or epsilon and epsilon0");
+  }
+
+  double epsilon = p.getStringAs<double>("epsilon");
+  double epsilon0 = p.getStringAs<double>("epsilon0");
+  Real major = 1 - epsilon;
+  Real minor = epsilon / 2;
+  Real major0 = 1 - epsilon0;
+  Real minor0 = epsilon0 / 2;
+  
+  _params.push_back(major);
+  _params.push_back(minor0);
+  _params.push_back(minor);
+  
+  _params.push_back(minor);
+  _params.push_back(major0);
+  _params.push_back(minor);
+  
+  _params.push_back(minor);
+  _params.push_back(minor0);
+  _params.push_back(major);
+}
+
 void EvidenceFactorGen::generateValues(const vector< string >& edge_types, 
 		      vector< Real >& outVals) const
 {
   assert(edge_types.size() == 1);
-  Real major = 1 - _epsilon;
-  Real minor = _epsilon / 2;
-  Real major0 = 1 - _epsilon0;
-  Real minor0 = _epsilon0 / 2;
-
-  outVals.push_back(major);
-  outVals.push_back(minor0);
-  outVals.push_back(minor);
-
-  outVals.push_back(minor);
-  outVals.push_back(major0);
-  outVals.push_back(minor);
-
-  outVals.push_back(minor);
-  outVals.push_back(minor0);
-  outVals.push_back(major);
+  for (size_t i = 0; i < _params.size(); i++) {
+    outVals.push_back(_params[i]);
+  }
 }
-
 
 EvidenceSource::EvidenceSource(PropertySet &p, string base) : 
   cutoffs(),
-  epsilon(0.01), 
-  epsilon0(0.2), 
+  options(p),
   attachPoint(), 
   _evidenceFile()
 {
@@ -38,14 +65,6 @@ EvidenceSource::EvidenceSource(PropertySet &p, string base) :
     setCutoffs(p.GetAs<string>("disc"));
   else
     setCutoffs("-1.3,1.3");
-
-  if (p.hasKey("epsilon")) {
-    epsilon = p.getStringAs<double>("epsilon");
-  }
-
-  if (p.hasKey("epsilon0")) {
-    epsilon0 = p.getStringAs<double>("epsilon0");
-  }
 
   if (p.hasKey("node"))
     attachPoint = p.GetAs<string>("node");
@@ -87,30 +106,11 @@ int EvidenceSource::discCutoffs  (float x)
   return i;
 }
 
-string EvidenceSource::genFactorString(int nodeID, int state)
-{
-  int varDimension = 3;
-  ostringstream result;
-	
-  double eps = (state == 1) ? epsilon0 : epsilon;
-  double e = eps / (double)(varDimension - 1);
-  result << "\n" << "1" << "\n" << (nodeID) << "\n" << (varDimension) << "\n" << (varDimension);
-  for(int i = 0; i < varDimension; i++)
-    {
-      if(i == state)
-	result << "\n" << (i) << "\t" << (1 - eps);
-      else
-	result << "\n" << (i) << "\t" << (e);
-    }
-  result << endl;
-  return result.str();
-}
-
 double stringToDouble(const string& s) {
   stringstream ss(s);
   double result;
   if (!(ss >> result).eof()) {
-    throw "String " + s + " can not be converted to double.";
+    THROW("String " + s + " can not be converted to double.");
   }
   return result;
 }
@@ -135,14 +135,14 @@ void EvidenceSource::loadFromFile(PathwayTab& p, Evidence& e)
       vars.push_back(p.addObservationNode(header[h], attachPoint, _suffix));
     }
 
-    FactorGenerator* fgen = new EvidenceFactorGen(epsilon, epsilon0);
+    FactorGenerator* fgen = new EvidenceFactorGen(options);
     p.addFactorGenerator("protein", _suffix, fgen);
     
     while(getline(infile,line)) {
       vector<string> vals;
       Tokenize(line,vals,"\t");
       if (vals.size() > vars.size() + 1) {
-	throw "Entries in evidence line does not match header length";
+	THROW("Entries in evidence line does not match header length");
       }
       string sample = vals[0];
       e.ensureSampleExists(sample);
@@ -161,22 +161,6 @@ void EvidenceSource::loadFromFile(PathwayTab& p, Evidence& e)
   return;
 }
 
-void EvidenceSource::addNodeNumber(int node_number, string name, string type)
-{
-  for (size_t sample = 0; sample < _disc.size(); sample++)
-    {
-      if (_disc[sample].count(name) > 0 && _disc[sample][name].count(type) > 0)
-	{
-	  int state = _disc[sample][name][type];
-	  _sampleFactors[sample] += genFactorString(node_number, state);
-	  _sampleFactorNum[sample]++;
-
-	  _disc[sample][name].erase(type);
-	  if (_disc[sample][name].size() == 0)
-	    _disc[sample].erase(name);
-	}
-    }
-}
 
 void Tokenize(const string& str,
 	      vector<string>& tokens,
