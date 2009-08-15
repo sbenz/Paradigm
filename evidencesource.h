@@ -85,7 +85,9 @@ public:
   void setCutoffs(string discLimits);
   int discCutoffs (float x);  
 
-  void loadFromFile(PathwayTab& p, Evidence& e);
+  void loadFromFile(PathwayTab& p, 
+		    map<string, size_t>& sampleMap, 
+		    vector<Observation>& sampleData);
 
   const string& evidenceFile() {return _evidenceFile;}
   const vector<string>& sampleNames() {return _sampleNames;}

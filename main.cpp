@@ -5,7 +5,6 @@
 #include <map>
 #include <dai/alldai.h>
 
-#include "common.h"
 #include "configuration.h"
 #include "evidencesource.h"
 
@@ -18,15 +17,15 @@ using namespace dai;
 
 #define VAR_DIM 3
 
+#define VERBOSE 1
+
 void print_usage(int signal)
 {
   cerr << "hgFactorGraph" << endl
        << "Usage:" << endl
-       <<"  hgFactorGraph [options] -p pathway.tab -c config.txt -b batchPrefix [-e emOutput]" << endl
+       <<"  hgFactorGraph -p pathway.tab -c config.txt -b batchPrefix [-e emOutput]" << endl
        << "C++ program for taking bioInt data and performing inference using libdai" << endl
-       << "Note this can't be linked in to kent src as libDAI is GPL" << endl
-       << "Valid options:" << endl
-       << "\t-v,--verbose : verbose mode" << endl;
+       << "Note this can't be linked in to kent src as libDAI is GPL" << endl;
   exit(signal);
 }
 
@@ -125,7 +124,7 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
 
 int main(int argc, char *argv[])
 {
-  const char* const short_options = "hp:b:c:e:o:v";
+  const char* const short_options = "hp:b:c:e:o:";
   const struct option long_options[] = {
     { "batch", 0, NULL, 'b' },
     { "config", 0, NULL, 'c' },
@@ -133,7 +132,6 @@ int main(int argc, char *argv[])
     { "em", 0, NULL, 'e' },
     { "output", 0, NULL, 'o' },
     { "help", 0, NULL, 'h' },
-	{ "verbose", 0, NULL, 'v' },
     { NULL, 0, NULL, 0 }
   };
   int next_options;
@@ -157,7 +155,6 @@ int main(int argc, char *argv[])
     case 'p': pathwayFilename = optarg; break;
     case 'e': paramsOutputFile = optarg; break;
     case 'o': actOutFile = optarg; break;
-	case 'v': VERBOSE = true; break;
     }
   } while (next_options != -1);
 
@@ -210,14 +207,14 @@ int main(int argc, char *argv[])
 
   // /////////////////////////////////////////////////
   // Read in evidence
-  Evidence evidence;
-
   vector<EvidenceSource> evid;
+  map<string,size_t> sampleMap;
+  vector<Observation> sampleData;
   for(size_t i = 0; i < conf.evidenceSize(); i++) {
     EvidenceSource e(conf.evidence(i), batchPrefix);
     if(VERBOSE)
       cerr << "Parsing evidence file: " << e.evidenceFile() << endl;
-    e.loadFromFile(pathway, evidence);
+    e.loadFromFile(pathway, sampleMap, sampleData);
     evid.push_back(e);
     if (i > 0 && e.sampleNames() != evid[0].sampleNames()) 
       {
@@ -246,7 +243,8 @@ int main(int argc, char *argv[])
   // /////////////////////////////////////////////////
   // Run EM
   const PropertySet& em_conf = conf.emProps();
-  EMAlg em(evidence, *prior, msteps, &em_conf);
+  Evidence evidence(sampleData);
+  EMAlg em(evidence, *prior, msteps, em_conf);
   while(!em.hasSatisfiedTermConditions()) {
     em.iterate();
     if (VERBOSE) {
@@ -263,12 +261,12 @@ int main(int argc, char *argv[])
   prior->run();
   
   // /////////////////////////////////////////////////
-  // Run inferenec on each of the samples
-  Evidence::iterator sample_iter = evidence.begin();
-  for ( ; sample_iter != evidence.end(); ++sample_iter) {
+  // Run inference on each of the samples
+  map<string, size_t>::iterator sample_iter = sampleMap.begin();
+  for ( ; sample_iter != sampleMap.end(); ++sample_iter) {
     InfAlg* clamped = prior->clone();
     
-    sample_iter->second.applyEvidence(*clamped);
+    sampleData[sample_iter->second].applyEvidence(*clamped);
     clamped->run();
     
     outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG, 

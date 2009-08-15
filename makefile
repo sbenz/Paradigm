@@ -1,8 +1,8 @@
 ifeq (,$(LIBDAIDIR))
-LIBDAIDIR=${HOME}/libDAI
+LIBDAIDIR=${HOME}/src/libDAI
 endif
 ifeq (,$(BOOST_DIR))
-BOOST_DIR=${HOME}
+BOOST_DIR=${HOME}/boost
 endif
 
 # Standard include directories
@@ -17,7 +17,6 @@ LIBFLAGS=${LIBDAIFLAGS} ${LIB_DIR} ${LIBS}
 SOURCES=configuration.cpp \
 	evidencesource.cpp \
 	pathwaytab.cpp \
-	externVars.cpp
 
 
 OBJECTS=$(SOURCES:.cpp=.o)
