@@ -1,8 +1,8 @@
 ifeq (,$(LIBDAIDIR))
-LIBDAIDIR=${HOME}/libDAI
+LIBDAIDIR=${HOME}/src/libDAI
 endif
 ifeq (,$(BOOST_DIR))
-BOOST_DIR=${HOME}
+BOOST_DIR=${HOME}/boost
 endif
 
 # Standard include directories
