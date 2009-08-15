@@ -5,6 +5,7 @@
 #include <map>
 #include <dai/alldai.h>
 
+#include "common.h"
 #include "configuration.h"
 #include "evidencesource.h"
 
@@ -17,15 +18,15 @@ using namespace dai;
 
 #define VAR_DIM 3
 
-#define VERBOSE 1
-
 void print_usage(int signal)
 {
   cerr << "hgFactorGraph" << endl
        << "Usage:" << endl
-       <<"  hgFactorGraph -p pathway.tab -c config.txt -b batchPrefix [-e emOutput]" << endl
+       <<"  hgFactorGraph [options] -p pathway.tab -c config.txt -b batchPrefix [-e emOutput]" << endl
        << "C++ program for taking bioInt data and performing inference using libdai" << endl
-       << "Note this can't be linked in to kent src as libDAI is GPL" << endl;
+       << "Note this can't be linked in to kent src as libDAI is GPL" << endl
+       << "Valid options:" << endl
+       << "\t-v,--verbose : verbose mode" << endl;
   exit(signal);
 }
 
@@ -124,7 +125,7 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
 
 int main(int argc, char *argv[])
 {
-  const char* const short_options = "hp:b:c:e:o:";
+  const char* const short_options = "hp:b:c:e:o:v";
   const struct option long_options[] = {
     { "batch", 0, NULL, 'b' },
     { "config", 0, NULL, 'c' },
@@ -132,6 +133,7 @@ int main(int argc, char *argv[])
     { "em", 0, NULL, 'e' },
     { "output", 0, NULL, 'o' },
     { "help", 0, NULL, 'h' },
+	{ "verbose", 0, NULL, 'v' },
     { NULL, 0, NULL, 0 }
   };
   int next_options;
@@ -155,6 +157,7 @@ int main(int argc, char *argv[])
     case 'p': pathwayFilename = optarg; break;
     case 'e': paramsOutputFile = optarg; break;
     case 'o': actOutFile = optarg; break;
+	case 'v': VERBOSE = true; break;
     }
   } while (next_options != -1);
 
