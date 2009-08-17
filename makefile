@@ -17,6 +17,7 @@ LIBFLAGS=${LIBDAIFLAGS} ${LIB_DIR} ${LIBS}
 SOURCES=configuration.cpp \
 	evidencesource.cpp \
 	pathwaytab.cpp \
+	externVars.cpp
 
 
 OBJECTS=$(SOURCES:.cpp=.o)

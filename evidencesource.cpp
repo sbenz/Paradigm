@@ -1,5 +1,6 @@
 #include <fstream>
 
+#include "common.h"
 #include "evidencesource.h"
 
 #define THROW(msg) throw std::runtime_error(msg)
@@ -85,7 +86,8 @@ void EvidenceSource::setCutoffs(string discLimits)
   Tokenize(discLimits,cutoffsStr,";");
   for(size_t i = 0; i < cutoffsStr.size(); i++)
     {
-      cerr << "Added cutoff " << atof(cutoffsStr[i].c_str()) << endl;
+      if(VERBOSE)
+		  cerr << "Added cutoff " << atof(cutoffsStr[i].c_str()) << endl;
       cutoffs.push_back(atof(cutoffsStr[i].c_str()));
     }
 }
