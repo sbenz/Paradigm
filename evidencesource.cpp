@@ -117,7 +117,9 @@ double stringToDouble(const string& s) {
   return result;
 }
 
-void EvidenceSource::loadFromFile(PathwayTab& p, Evidence& e)
+void EvidenceSource::loadFromFile(PathwayTab& p, 
+				  map<string, size_t>& sampleMap, 
+				  vector<Observation>& sampleData) 
 {
   ifstream infile;
   infile.open( _evidenceFile.c_str() );
@@ -147,7 +149,6 @@ void EvidenceSource::loadFromFile(PathwayTab& p, Evidence& e)
 	THROW("Entries in evidence line does not match header length");
       }
       string sample = vals[0];
-      e.ensureSampleExists(sample);
       _sampleNames.push_back(sample);
       vals.erase(vals.begin());
       
@@ -155,7 +156,12 @@ void EvidenceSource::loadFromFile(PathwayTab& p, Evidence& e)
 	if(strcmp(vals[i].c_str(),"NA")==0)
 	  continue;
 	double evidence = stringToDouble(vals[i]);
-	e.addObservation(sample, vars[i], discCutoffs(evidence));
+	if (sampleMap.count(sample) == 0) {
+	  sampleMap[sample] = sampleData.size();
+	  sampleData.push_back(Observation());
+	}
+	size_t sample_idx = sampleMap[sample];
+	sampleData[sample_idx].addObservation(vars[i], discCutoffs(evidence));
       }
     }
     infile.close();

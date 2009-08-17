@@ -210,14 +210,14 @@ int main(int argc, char *argv[])
 
   // /////////////////////////////////////////////////
   // Read in evidence
-  Evidence evidence;
-
   vector<EvidenceSource> evid;
+  map<string,size_t> sampleMap;
+  vector<Observation> sampleData;
   for(size_t i = 0; i < conf.evidenceSize(); i++) {
     EvidenceSource e(conf.evidence(i), batchPrefix);
     if(VERBOSE)
       cerr << "Parsing evidence file: " << e.evidenceFile() << endl;
-    e.loadFromFile(pathway, evidence);
+    e.loadFromFile(pathway, sampleMap, sampleData);
     evid.push_back(e);
     if (i > 0 && e.sampleNames() != evid[0].sampleNames()) 
       {
@@ -246,7 +246,8 @@ int main(int argc, char *argv[])
   // /////////////////////////////////////////////////
   // Run EM
   const PropertySet& em_conf = conf.emProps();
-  EMAlg em(evidence, *prior, msteps, &em_conf);
+  Evidence evidence(sampleData);
+  EMAlg em(evidence, *prior, msteps, em_conf);
   while(!em.hasSatisfiedTermConditions()) {
     em.iterate();
     if (VERBOSE) {
@@ -263,12 +264,12 @@ int main(int argc, char *argv[])
   prior->run();
   
   // /////////////////////////////////////////////////
-  // Run inferenec on each of the samples
-  Evidence::iterator sample_iter = evidence.begin();
-  for ( ; sample_iter != evidence.end(); ++sample_iter) {
+  // Run inference on each of the samples
+  map<string, size_t>::iterator sample_iter = sampleMap.begin();
+  for ( ; sample_iter != sampleMap.end(); ++sample_iter) {
     InfAlg* clamped = prior->clone();
     
-    sample_iter->second.applyEvidence(*clamped);
+    sampleData[sample_iter->second].applyEvidence(*clamped);
     clamped->run();
     
     outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG, 
