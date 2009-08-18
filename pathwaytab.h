@@ -35,6 +35,17 @@ public:
 		      vector< Real >& outVals) const;
 };
 
+class SingleMemberNeededFactorGenerator : public FactorGenerator{
+private:
+  Real _epsilon;
+public:
+  SingleMemberNeededFactorGenerator(double epsilon=0.001) : 
+    _epsilon(epsilon) {}
+  ~SingleMemberNeededFactorGenerator() {}
+  void generateValues(const vector< string >& edge_types, 
+		      vector< Real >& outVals) const;
+};
+
 class PathwayTab;
 
 void readInteractionMap(istream& is, map< string, vector< string > >& out_imap);

@@ -44,6 +44,9 @@ protein	GNAZ
 protein	UniProt:P14780
 protein	SRC
 protein	MAPT
+protein	MAPT2
+protein	MAPT3
+family	MAPT_Family
 protein	IL8
 protein	GNAO1
 protein	GNAI3
@@ -210,7 +213,10 @@ GNAZ	HRAS/GTP	-a>
 GNAZ	Gi(beta/gamma)	component>
 UniProt:P14780	HBEGF	-a>
 SRC	TRIP6	-a>
-MAPT	positive regulation of microtubule depolymerization	-ap>
+MAPT	MAPT_Family	member>
+MAPT2	MAPT_Family	member>
+MAPT3	MAPT_Family	member>
+MAPT_Family	positive regulation of microtubule depolymerization	-ap>
 GNAO1	ADCY4	-a>
 GNAO1	ADCY1	-a>
 GNAO1	ADCY2	-a>

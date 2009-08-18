@@ -23,6 +23,7 @@ const std::string PathwayTab::DEFAULT_INTERACTION_MAP =
   "-|	active	active	negative\n"
   "<->	active	active	positive\n"
   "component>	active	active	positive\n"
+  "member>	active	active	positive\n"
   ;
 
 const std::string PathwayTab::CENTRAL_DOGMA = 
@@ -69,6 +70,29 @@ void RepressorDominatesVoteFactorGenerator::generateValues(const vector< string 
   }
 }
 
+void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& edge_types, 
+							   vector< Real >& v) const {
+  Real minor = _epsilon / 2;
+  Real major = 1 - _epsilon;
+  vector< size_t > dims;
+  dims.reserve(edge_types.size());
+  for (size_t i = 0; i < edge_types.size(); ++i) {
+    dims.push_back(PathwayTab::VARIABLE_DIMENSION);
+  }
+  dai::MultiFor s(dims);
+
+  for ( ; s.valid(); ++s) {
+	size_t highestIndex = s[0];
+    for (size_t i = 0; i < edge_types.size(); ++i) {
+	  if(s[i] > highestIndex)
+		highestIndex = s[i];
+    }
+
+    for (size_t i = 0; i < PathwayTab::VARIABLE_DIMENSION; ++i) {
+	  v.push_back(i == highestIndex ? major : minor);
+    }
+  }
+}
 void readInteractionMap(istream& is, 
 			map< string, vector< string > >& out_imap) {
   string line;
