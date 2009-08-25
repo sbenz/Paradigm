@@ -238,20 +238,56 @@ int main(int argc, char *argv[])
   map< long, string > outNodes = pathway.getOutputNodeMap();
   
   // add in additional factors to link disconnected pieces of the pathway
-  /*vector< Factor >::iterator factorIter = factors.begin();
-  for ( ; factorIter != factors.end(); ++factorIter) {
+  // start with a single (random) node, and follow it out, marking down all the nodes we see
+  map< long, bool > nodesSeen;
+  vector< long > nodesToCheck;
+  vector< Factor >::iterator factorIter = factors.begin();
+  const VarSet tmpVars = factorIter->vars();
+  vector< Var >::const_iterator tmpVarsIter;
+  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+	const long varLabel = tmpVarsIter->label();
+	nodesToCheck.push_back(varLabel);
+	nodesSeen[varLabel] = true;
+  }
+  while(nodesToCheck.size() > 0)
+  {
+	long currNode = nodesToCheck.back();
+	nodesToCheck.pop_back();
+	for ( factorIter = factors.begin(); factorIter != factors.end(); ++factorIter) {
+	  const VarSet tmpVars = factorIter->vars();
+	  //vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
+	  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+		const long varLabel = tmpVarsIter->label();
+		if(varLabel == currNode)
+		{
+		  vector< Var >::const_iterator tmpVarsIter2 = tmpVars.begin();
+		  for ( ; tmpVarsIter2 != tmpVars.end(); ++tmpVarsIter2) {
+			const long varLabel2 = tmpVarsIter2->label();
+			if(!nodesSeen[varLabel2])
+			{
+			  nodesToCheck.push_back(varLabel2);
+			  nodesSeen[varLabel2] = true;  
+			}
+		  }		  
+		}
+	  }	
+	}
+	
+  }
+  
+  // now go find ones that aren't connected to this
+  for ( factorIter = factors.begin(); factorIter != factors.end(); ++factorIter) {
 	const VarSet tmpVars = factorIter->vars();
-	vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
-	cout << "-----" << endl;
-    for ( ; tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
-	//Var tmpVar = tmpVarsIter;
+	//vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
+    for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
 	  const long varLabel = tmpVarsIter->label();
-	  cout << "Var: " << varLabel << " | " << outNodes[varLabel] << endl;
+	  if(!nodesSeen[varLabel])
+	  cout << "Var not seen: " << varLabel << " | " << outNodes[varLabel] << endl;
 	}	
-  }*/
+  }
   
   FactorGraph priorFG(factors);
-  cout << "Prior: " << priorFG.isConnected() << endl;
+  //cout << "Prior: " << priorFG.isConnected() << endl;
   PropertySet inferenceOptions = conf.getInferenceProperties(pathwayFilename);
   std::string method = inferenceOptions.GetAs<std::string>("method");
   
