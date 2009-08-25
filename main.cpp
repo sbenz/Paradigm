@@ -235,11 +235,25 @@ int main(int argc, char *argv[])
   vector< Factor > factors;
   vector< MaximizationStep > msteps;
   pathway.constructFactors(conf.emSteps(), factors, msteps);
+  map< long, string > outNodes = pathway.getOutputNodeMap();
+  
+  // add in additional factors to link disconnected pieces of the pathway
+  /*vector< Factor >::iterator factorIter = factors.begin();
+  for ( ; factorIter != factors.end(); ++factorIter) {
+	const VarSet tmpVars = factorIter->vars();
+	vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
+	cout << "-----" << endl;
+    for ( ; tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+	//Var tmpVar = tmpVarsIter;
+	  const long varLabel = tmpVarsIter->label();
+	  cout << "Var: " << varLabel << " | " << outNodes[varLabel] << endl;
+	}	
+  }*/
   
   FactorGraph priorFG(factors);
+  cout << "Prior: " << priorFG.isConnected() << endl;
   PropertySet inferenceOptions = conf.getInferenceProperties(pathwayFilename);
   std::string method = inferenceOptions.GetAs<std::string>("method");
-  map< long, string > outNodes = pathway.getOutputNodeMap();
   
   InfAlg* prior = newInfAlg(method, priorFG, inferenceOptions);
   prior->init();
