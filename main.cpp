@@ -43,6 +43,48 @@ inline double log10odds(double post,double prior)
     / log(10); 
 }
 
+// returns a map of all the nodes in a single subnet, for testing against
+map< long, bool > nodesInSingleNet(vector< Factor > factors)
+{
+  // start with a single (random) node, and follow it out, marking down all the nodes we see
+  map< long, bool > nodesSeen;
+  vector< long > nodesToCheck;
+  vector< Factor >::iterator factorIter = factors.begin();
+  const VarSet tmpVars = factorIter->vars();
+  vector< Var >::const_iterator tmpVarsIter;
+  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+	const long varLabel = tmpVarsIter->label();
+	nodesToCheck.push_back(varLabel);
+	nodesSeen[varLabel] = true;
+  }
+  while(nodesToCheck.size() > 0)
+  {
+	long currNode = nodesToCheck.back();
+	nodesToCheck.pop_back();
+	for ( factorIter = factors.begin(); factorIter != factors.end(); ++factorIter) {
+	  const VarSet tmpVars = factorIter->vars();
+	  //vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
+	  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+		const long varLabel = tmpVarsIter->label();
+		if(varLabel == currNode)
+		{
+		  vector< Var >::const_iterator tmpVarsIter2 = tmpVars.begin();
+		  for ( ; tmpVarsIter2 != tmpVars.end(); ++tmpVarsIter2) {
+			const long varLabel2 = tmpVarsIter2->label();
+			if(!nodesSeen[varLabel2])
+			{
+			  nodesToCheck.push_back(varLabel2);
+			  nodesSeen[varLabel2] = true;  
+			}
+		  }		  
+		}
+	  }	
+	}
+	
+  }
+  return nodesSeen;
+}
+
 void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 			      FactorGraph& fg, map<long,string>& activeNodes,
 			      ostream& out)
@@ -238,53 +280,39 @@ int main(int argc, char *argv[])
   map< long, string > outNodes = pathway.getOutputNodeMap();
   
   // add in additional factors to link disconnected pieces of the pathway
-  // start with a single (random) node, and follow it out, marking down all the nodes we see
-  map< long, bool > nodesSeen;
-  vector< long > nodesToCheck;
-  vector< Factor >::iterator factorIter = factors.begin();
-  const VarSet tmpVars = factorIter->vars();
-  vector< Var >::const_iterator tmpVarsIter;
-  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
-	const long varLabel = tmpVarsIter->label();
-	nodesToCheck.push_back(varLabel);
-	nodesSeen[varLabel] = true;
-  }
-  while(nodesToCheck.size() > 0)
+  FactorGraph *testGraphConnected = new FactorGraph(factors);
+  while(!testGraphConnected->isConnected())
   {
-	long currNode = nodesToCheck.back();
-	nodesToCheck.pop_back();
-	for ( factorIter = factors.begin(); factorIter != factors.end(); ++factorIter) {
+	map< long, bool > nodesInSubNet = nodesInSingleNet(factors);
+	long backNode = nodesInSubNet.rbegin()->first;
+    VarSet I_vars;
+	//Var newNodes(backNode,PathwayTab::VARIABLE_DIMENSION);
+	//newNodes.push_back(backNode,PathwayTab::VARIABLE_DIMENSION);
+	I_vars |= Var(backNode, PathwayTab::VARIABLE_DIMENSION);
+	bool addedLink = false;
+	// now go find ones that aren't connected to this
+	vector< Factor >::iterator factorIter;
+	for ( factorIter = factors.begin(); !addedLink && factorIter != factors.end(); ++factorIter) {
 	  const VarSet tmpVars = factorIter->vars();
+	  vector< Var >::const_iterator tmpVarsIter;
 	  //vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
-	  for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+	  for (tmpVarsIter = tmpVars.begin(); !addedLink && tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
 		const long varLabel = tmpVarsIter->label();
-		if(varLabel == currNode)
+		if(!nodesInSubNet[varLabel])
 		{
-		  vector< Var >::const_iterator tmpVarsIter2 = tmpVars.begin();
-		  for ( ; tmpVarsIter2 != tmpVars.end(); ++tmpVarsIter2) {
-			const long varLabel2 = tmpVarsIter2->label();
-			if(!nodesSeen[varLabel2])
-			{
-			  nodesToCheck.push_back(varLabel2);
-			  nodesSeen[varLabel2] = true;  
-			}
-		  }		  
+		  I_vars |= Var(varLabel, PathwayTab::VARIABLE_DIMENSION);
+		  
+		  factors.push_back( Factor( I_vars, 1.0 ) );
+		  addedLink = true;
 		}
+		//cout << "Var not seen: " << varLabel << " | " << outNodes[varLabel] << endl;
 	  }	
 	}
-	
+	break;
+	delete testGraphConnected;
+	testGraphConnected = new FactorGraph(factors);
   }
-  
-  // now go find ones that aren't connected to this
-  for ( factorIter = factors.begin(); factorIter != factors.end(); ++factorIter) {
-	const VarSet tmpVars = factorIter->vars();
-	//vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
-    for (tmpVarsIter = tmpVars.begin(); tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
-	  const long varLabel = tmpVarsIter->label();
-	  if(!nodesSeen[varLabel])
-	  cout << "Var not seen: " << varLabel << " | " << outNodes[varLabel] << endl;
-	}	
-  }
+  delete testGraphConnected;
   
   FactorGraph priorFG(factors);
   //cout << "Prior: " << priorFG.isConnected() << endl;
