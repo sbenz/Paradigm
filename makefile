@@ -1,9 +1,5 @@
-ifeq (,$(LIBDAIDIR))
-LIBDAIDIR=${HOME}/src/libDAI
-endif
-ifeq (,$(BOOST_DIR))
-BOOST_DIR=${HOME}/boost
-endif
+LIBDAIDIR ?= /projects/sysbio/apps/${MACHTYPE}
+BOOST_DIR ?= /projects/sysbio/apps/${MACHTYPE}
 
 # Standard include directories
 CCINC=-I${LIBDAIDIR}/include -I$(BOOST_DIR)/include/boost-1_38
