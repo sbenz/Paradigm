@@ -1,5 +1,3 @@
-include makefile.conf
-
 LIBDAI_DIR ?= /projects/sysbio/apps/${MACHTYPE}
 BOOST_DIR ?= /projects/sysbio/apps/${MACHTYPE}
 
