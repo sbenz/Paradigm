@@ -22,10 +22,11 @@ void print_usage(int signal)
 {
   cerr << "hgFactorGraph" << endl
        << "Usage:" << endl
-       <<"  hgFactorGraph [options] -p pathway.tab -c config.txt -b batchPrefix [-e emOutput]" << endl
+       <<"  hgFactorGraph [options] -p path.tab -c cfg.txt -b prefix" << endl
        << "C++ program for taking bioInt data and performing inference using libdai" << endl
        << "Note this can't be linked in to kent src as libDAI is GPL" << endl
        << "Valid options:" << endl
+			 << "\t-e emOutputFile" << endl
        << "\t-v,--verbose : verbose mode" << endl;
   exit(signal);
 }
