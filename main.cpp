@@ -194,7 +194,6 @@ int main(int argc, char *argv[])
     next_options=getopt_long(argc,argv,short_options,long_options,NULL);
     switch (next_options){
     case 'h': print_usage(EXIT_SUCCESS); break;
-      //case 't': cout << "Found t=" << optarg << endl; break;
     case 'b': batchPrefix = optarg; break;
     case 'c': configFile = optarg; break;
     case 'p': pathwayFilename = optarg; break;
@@ -287,8 +286,6 @@ int main(int argc, char *argv[])
 	map< long, bool > nodesInSubNet = nodesInSingleNet(factors);
 	long backNode = nodesInSubNet.rbegin()->first;
     VarSet I_vars;
-	//Var newNodes(backNode,PathwayTab::VARIABLE_DIMENSION);
-	//newNodes.push_back(backNode,PathwayTab::VARIABLE_DIMENSION);
 	I_vars |= Var(backNode, PathwayTab::VARIABLE_DIMENSION);
 	bool addedLink = false;
 	// now go find ones that aren't connected to this
@@ -296,7 +293,6 @@ int main(int argc, char *argv[])
 	for ( factorIter = factors.begin(); !addedLink && factorIter != factors.end(); ++factorIter) {
 	  const VarSet tmpVars = factorIter->vars();
 	  vector< Var >::const_iterator tmpVarsIter;
-	  //vector< Var >::const_iterator tmpVarsIter = tmpVars.begin();
 	  for (tmpVarsIter = tmpVars.begin(); !addedLink && tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
 		const long varLabel = tmpVarsIter->label();
 		if(!nodesInSubNet[varLabel])
@@ -306,7 +302,6 @@ int main(int argc, char *argv[])
 		  factors.push_back( Factor( I_vars, 1.0 ) );
 		  addedLink = true;
 		}
-		//cout << "Var not seen: " << varLabel << " | " << outNodes[varLabel] << endl;
 	  }	
 	}
 	break;
@@ -316,7 +311,7 @@ int main(int argc, char *argv[])
   delete testGraphConnected;
   
   FactorGraph priorFG(factors);
-  //cout << "Prior: " << priorFG.isConnected() << endl;
+
   PropertySet inferenceOptions = conf.getInferenceProperties(pathwayFilename);
   std::string method = inferenceOptions.GetAs<std::string>("method");
   

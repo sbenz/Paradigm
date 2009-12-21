@@ -11,7 +11,7 @@ BOOST_LIB ?= ${BOOST_DIR}/lib
 CCINC=-I${LIBDAI_INC} -I${BOOST_INC}
 CPPFLAGS=-O3 -W -Wall -Wextra -fPIC ${CCINC}
 
-LIBDAIFLAGS=-DDAI_WITH_BP -DDAI_WITH_MF -DDAI_WITH_HAK -DDAI_WITH_LC -DDAI_WITH_TREEEP -DDAI_WITH_JTREE -DDAI_WITH_MR -DDAI_WITH_GIBBS
+LIBDAIFLAGS=-DDAI_WITH_BP -DDAI_WITH_MF -DDAI_WITH_HAK -DDAI_WITH_LC -DDAI_WITH_TREEEP -DDAI_WITH_JTREE -DDAI_WITH_MR -DDAI_WITH_GIBBS -DMACOSX
 LIB_DIR=-L${LIBDAI_LIB} -L${BOOST_LIB}
 LIBS=-ldai
 LIBFLAGS=${LIBDAIFLAGS} ${LIB_DIR} ${LIBS}
@@ -33,6 +33,10 @@ all: $(EXECUTABLES)
 
 include $(ALLSOURCES:.cpp=.d)
 
+env:
+	@echo ${LIBDAI_DIR}
+	@echo ${BOOST_DIR}
+
 hgFactorGraph: main.o ${OBJECTS} 
 	${CXX} ${CPPFLAGS} -o $@ $< ${OBJECTS} ${LIBFLAGS} 
 
@@ -47,3 +51,7 @@ clean:
 	$(CXX) -M $(CPPFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
+
+
+TAGS:
+	etags *.h *.cpp
