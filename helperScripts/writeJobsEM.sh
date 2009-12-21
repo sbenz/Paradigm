@@ -17,8 +17,8 @@ for P in ${DIRECTORY}/*_pathway.tab; do
     INFIX=`echo $P | sed "s/_pathway.tab//g" | sed "s/${DIRECTORY}\///g"`
     
 	# this ignores the na_ and nw_ files
-    for F in ${DIRECTORY}/${INFIX}_*genome.tab; do
-	T=`echo $F | sed "s/_genome.tab//g"`
+    for F in ${DIRECTORY}/${INFIX}_*CNV.tab; do
+	T=`echo $F | sed "s/_CNV.tab//g"`
 	B=`basename $T`
 	echo "/hive/users/${USER}/bin/hgFactorGraph -p ${P} -b ${T} -c ${OUTDIR}/config.txt -e $OUTDIR/${B}_learned_parameters.fa -o $OUTDIR/${B}_output.fa"
     done

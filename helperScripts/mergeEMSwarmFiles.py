@@ -1,4 +1,23 @@
-import sys, os, string, fnmatch
+#!/usr/bin/python
+import sys, os, string, fnmatch, re
+
+skipEvidenceOptions = ["epsilon", "epsilon0", "reverse"]
+
+def readEvidenceConfiguration(filename):
+    f = open(filename, "r")
+    typeToOpts = {}
+    infLines = []
+    for x in f.readlines():
+        m = re.match("(\w+)\s+\[(.*)\]", x)
+        if m == None: sys.exit("Bad configuration line:\n %s" % x)
+        if m.group(1) == "inference": infLines.append(x)
+        elif m.group(1) == "evidence":
+            opts = {}
+            for f in m.group(2).split(","):
+                ff = f.split("=", 1)
+                opts[ff[0]] = ff[1]
+            typeToOpts[opts["suffix"]] = opts
+    return infLines, typeToOpts
 
 def getFilesMatching(baseDir, patterns):
     list = []
@@ -40,7 +59,7 @@ def addData(fname, sampleData):
 
     inFile.close()
     
-def mergeFiles(outdirectory, files):
+def mergeFiles(outdirectory, files, infLines, evidLines):
 
     sampleData = {}
     for f in files:
@@ -48,11 +67,14 @@ def mergeFiles(outdirectory, files):
 
     outname = os.path.join(outdirectory, "config.txt")
     outfile = open(outname,'w')
-    outfile.write("inference [method=JTREE,updates=HUGIN,verbose=1]\n")
+    for l in infLines: outfile.write(l)
 
     for type in sampleData:
-        node = type.split(".").pop(0)[1:]
-        outfile.write("evidence [suffix="+type+",node="+node+",disc=-1.3;1.3,factorParams=")
+        evid = evidLines[type]
+        outfile.write("evidence [")
+        for k,v in evid.items():
+            if k not in skipEvidenceOptions: outfile.write("%s=%s,"% (k,v))
+        outfile.write("factorParams=")
         for i in range(3):
             for j in range(3):
                 sampleData[type][i][j] /= len(files)
@@ -62,10 +84,11 @@ def mergeFiles(outdirectory, files):
         outfile.write("]\n")
     
 def main(indirectory, outdirectory):
+    infLines, evidConf = readEvidenceConfiguration("%s/config.txt" % indirectory)
     allfiles = getFilesMatching(indirectory, ["*learned_parameters.fa"])
     print "found ", len(allfiles), " files total"
     
-    mergeFiles(outdirectory, allfiles)
+    mergeFiles(outdirectory, allfiles, infLines, evidConf)
     
 
 def usage():

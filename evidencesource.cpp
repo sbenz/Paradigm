@@ -34,17 +34,42 @@ EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params()
   Real major0 = 1 - epsilon0;
   Real minor0 = epsilon0 / 2;
   
-  _params.push_back(major);
-  _params.push_back(minor0);
-  _params.push_back(minor);
-  
-  _params.push_back(minor);
-  _params.push_back(major0);
-  _params.push_back(minor);
-  
-  _params.push_back(minor);
-  _params.push_back(minor0);
-  _params.push_back(major);
+  bool flip = false;
+  if (p.hasKey("reverse")) {
+    if (p.getStringAs<string>("reverse") == "true") {
+      flip = true;
+    } else if (p.getStringAs<string>("reverse") == "false") {
+      flip = false;
+    } else {
+      THROW("The 'reverse' option for evidence must be 'true' or 'false'");
+    }
+  }
+
+  if (flip) {
+    _params.push_back(minor);
+    _params.push_back(minor0);
+    _params.push_back(major);
+ 
+    _params.push_back(minor);
+    _params.push_back(major0);
+    _params.push_back(minor);
+
+    _params.push_back(major);
+    _params.push_back(minor0);
+    _params.push_back(minor);
+  } else {
+    _params.push_back(major);
+    _params.push_back(minor0);
+    _params.push_back(minor);
+    
+    _params.push_back(minor);
+    _params.push_back(major0);
+    _params.push_back(minor);
+    
+    _params.push_back(minor);
+    _params.push_back(minor0);
+    _params.push_back(major);
+  }
 }
 
 void EvidenceFactorGen::generateValues(const vector< string >& edge_types, 
