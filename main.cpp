@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     { "em", 0, NULL, 'e' },
     { "output", 0, NULL, 'o' },
     { "help", 0, NULL, 'h' },
-	{ "verbose", 0, NULL, 'v' },
+    { "verbose", 0, NULL, 'v' },
     { NULL, 0, NULL, 0 }
   };
   int next_options;
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
   if (!pathwayStream.is_open()) {
     die("Could not open pathway stream");
   }
-  PathwayTab pathway = PathwayTab::create(pathwayStream);
+  PathwayTab pathway = PathwayTab::create(pathwayStream, conf.pathwayProps());
   pathway.addFactorGenerator("family","active",new SingleMemberNeededFactorGenerator());
 
   // /////////////////////////////////////////////////

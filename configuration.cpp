@@ -2,7 +2,7 @@
 
 const std::string RunConfiguration::INFERENCE_CONF_TOKEN("inference");
 const std::string RunConfiguration::EVIDENCE_CONF_TOKEN("evidence");
-const std::string RunConfiguration::PATHWAY_STRUCTURE_CONF_TOKEN("pathway_structure");
+const std::string RunConfiguration::PATHWAY_CONF_TOKEN("pathway");
 const std::string RunConfiguration::EM_STEP_CONF_TOKEN("em_step");
 const std::string RunConfiguration::EM_CONF_TOKEN("em");
 
@@ -60,6 +60,8 @@ RunConfiguration::addConfigurations(std::istream& is)
 	_emsteps.push_back(e);
       } else if (type == EM_CONF_TOKEN) {
 	_em = conf;
+      } else if (type == PATHWAY_CONF_TOKEN) {
+	_path = conf;
       } else {
 	THROW("Expecting an inference or evidence token in conf file");
       }

@@ -77,14 +77,17 @@ private:
   GeneProteinExpressionModel _dogma;
   map< string, vector< string > > _imap;
   
+  PropertySet _props;
   map< pair<string, string>, FactorGenerator* > _factorGenLookup;
   FactorGenerator* _defaultFactorGen;
 
   PathwayTab(istream& pathway_stream, 
 	     istream& imap_stream, 
-	     istream& dogma_stream);
+	     istream& dogma_stream,
+	     const PropertySet& props);
 public:
   static PathwayTab create(istream& pathway_stream,
+			   const PropertySet& props,
 			   istream* imap_stream=NULL,
 			   istream* dogma_stream=NULL) {
     istringstream is(DEFAULT_INTERACTION_MAP);
@@ -95,7 +98,7 @@ public:
     if (dogma_stream == NULL) {
       dogma_stream = &ds;
     }
-    return PathwayTab(pathway_stream, *imap_stream, *dogma_stream);
+    return PathwayTab(pathway_stream, *imap_stream, *dogma_stream, props);
   }
 		      
   ~PathwayTab() { 
@@ -148,6 +151,10 @@ public:
   int debugPrintParents(size_t node_i);
   void printNodeMap(ostream& to=cout, const string& prefix="# ");
   void printDaiFactorSection(ostream& to=cout);
+
+  void splitNodeParents(const Node& n, const size_t maxParents);
+  void splitHighInDegree(const int maxParents);
+
   void generateFactorValues(const Node& child, 
 			    const vector< string >& edge_types,
 			    vector< Real >& outValues) const;

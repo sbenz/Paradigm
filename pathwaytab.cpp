@@ -1,6 +1,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 #include <dai/index.h>
 #include "pathwaytab.h"
@@ -139,13 +140,15 @@ void GeneProteinExpressionModel::addGeneDogma(const string& genename,
 
 PathwayTab::PathwayTab(istream& pathway_stream, 
 		       istream& imap_stream, 
-		       istream& dogma_stream) 
+		       istream& dogma_stream,
+		       const PropertySet& props)
   : _nodemap(),
     _nodevector(),
     _parents(),
     _entities(),
     _dogma(dogma_stream),
     _imap(),
+    _props(props),
     _factorGenLookup(),
     _defaultFactorGen(new RepressorDominatesVoteFactorGenerator()) {
   vector< vector< string > > entity_lines;
@@ -162,7 +165,7 @@ PathwayTab::PathwayTab(istream& pathway_stream,
     } else if (vals.size() == 3) {
       interaction_lines.push_back(vals);
     } else {
-      THROW("Must have either to or three entries per line");
+      THROW("Must have either two or three entries per line");
     }
   }
   vector< vector< string > >::iterator v = entity_lines.begin();
@@ -171,6 +174,11 @@ PathwayTab::PathwayTab(istream& pathway_stream,
   }
   for (v = interaction_lines.begin(); v != interaction_lines.end(); ++v) {
     addInteraction(v->at(0), v->at(1), v->at(2));
+  }
+
+  if (_props.hasKey("max_in_degree")) {
+    int max_degree = props.getStringAs<int>("max_in_degree");
+    splitHighInDegree(max_degree);
   }
 }
 
@@ -324,6 +332,51 @@ void PathwayTab::printDaiFactorSection(ostream& to) {
   }
 }
 
+void PathwayTab::splitNodeParents(const Node& n, const size_t maxParents) {
+  map< Node, map< Node, string > >::iterator pmap_i = _parents.find(n);
+  assert(pmap_i != _parents.end());
+  unsigned int numNodes = (pmap_i->second.size() / maxParents) 
+    + (pmap_i->second.size() % maxParents > 0);
+  if (numNodes > maxParents) {numNodes = maxParents;}
+  cout << "Node " << n << " needs split for " << numNodes << " new nodes.\n";
+  if (numNodes > 1) {
+    vector<Node> newNodes;
+
+    // Step 1 of 4: create intermediate nodes
+    for (size_t i = 0; i < numNodes; ++i) {
+      stringstream s;
+      s << n.first << "__" << i;
+      Node newNode(s.str(), n.second);
+      newNodes.push_back(newNode);
+      addNode(newNode);
+    }
+    
+    // Step 2 of 4: connect parents to intermediate nodes
+    map< Node, string >::iterator parent_i = pmap_i->second.begin();
+    for (int nodeIndex = 0; parent_i != pmap_i->second.end(); ++parent_i) {
+      addEdge(parent_i->first, newNodes[nodeIndex], parent_i->second);
+      nodeIndex = (nodeIndex + 1) % numNodes;
+    }
+
+    // Step 3 of 4: remove edges to child and replace with intermediate edges
+    _parents[n].clear();
+    for (size_t i = 0; i < numNodes; ++i) {
+      addEdge(newNodes[i], n, _parents[newNodes[i]].begin()->second);
+    }
+
+    // Step 4 of 4: recursively break up nodes, if necessary
+    for (size_t i = 0; i < numNodes; ++i) {
+      splitNodeParents(newNodes[i], maxParents);
+    }
+  }
+}
+
+void PathwayTab::splitHighInDegree(const int maxParents) {
+  vector< Node > origN = _nodevector;
+  for (vector<Node>::iterator i = origN.begin(); i != origN.end(); ++i) {
+    splitNodeParents(*i, maxParents);
+  }
+}
 void PathwayTab::generateFactorValues(const Node& child, 
 				      const vector< string >& edge_types,
 				      vector< Real >& outValues) const {

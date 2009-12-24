@@ -16,7 +16,7 @@ class RunConfiguration
 public:
   static const std::string INFERENCE_CONF_TOKEN;
   static const std::string EVIDENCE_CONF_TOKEN;
-  static const std::string PATHWAY_STRUCTURE_CONF_TOKEN;
+  static const std::string PATHWAY_CONF_TOKEN;
   static const std::string EM_STEP_CONF_TOKEN;
   static const std::string EM_CONF_TOKEN;
 
@@ -30,11 +30,12 @@ private:
   std::vector<PropertySet> _evidences;
   EMSteps _emsteps;
   PropertySet _em;
+  PropertySet _path;
   
 public:
 
   /// Default constructor
-  RunConfiguration() : _inferences(), _evidences(), _emsteps(), _em() {
+  RunConfiguration() : _inferences(), _evidences(), _emsteps(), _em(), _path(){
     _em.Set("max_iters", 0);
   }
 
@@ -43,7 +44,8 @@ public:
     _inferences(x._inferences), 
     _evidences(x._evidences),
     _emsteps(x._emsteps),
-    _em(x._em)
+    _em(x._em),
+    _path(x._path)
   {}
 
   /// Assignment operator
@@ -53,6 +55,7 @@ public:
       _evidences = x._evidences;
       _emsteps = x._emsteps;
       _em = x._em;
+      _path = x._path;
     }
     return *this;
   }
@@ -66,8 +69,10 @@ public:
 
   PropertySet& evidence(size_t i);
 
+  PropertySet& pathwayProps() {return _path;}
+  
   size_t evidenceSize();
-
+  
   const PropertySet& emProps() { return _em; }
   
   const EMSteps emSteps() const {return _emsteps;}
