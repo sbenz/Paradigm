@@ -338,7 +338,6 @@ void PathwayTab::splitNodeParents(const Node& n, const size_t maxParents) {
   unsigned int numNodes = (pmap_i->second.size() / maxParents) 
     + (pmap_i->second.size() % maxParents > 0);
   if (numNodes > maxParents) {numNodes = maxParents;}
-  cout << "Node " << n << " needs split for " << numNodes << " new nodes.\n";
   if (numNodes > 1) {
     vector<Node> newNodes;
 
