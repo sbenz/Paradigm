@@ -116,8 +116,7 @@ public:
   void addInteraction(const string& entity_from, const string& entity_to, 
 		      const string& interaction);
 
-  void addNode(Node nodename);
-  void addNode(const string& entity, const string& subtype);
+  void addNode(Node nodename); // see also addEntity
   void addEdge(const Node& from, const Node& to, const string& label);
   void getAppropriateEntityNode(const string& entity, const string& species,
 				Node& out_node);
