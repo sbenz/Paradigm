@@ -25,7 +25,7 @@ RAC1	1.47368
 GNB1	0
 RHOA	0.679258
 GNG2	2.06168
-UniProt:P56945	-9.64327e-17
+UniProt:P56945	0
 ADCY7	0.574688
 GNAQ	0
 GSK3B	0
@@ -45,6 +45,9 @@ GNAZ	0
 UniProt:P14780	4.75537e-06
 SRC	2.12274
 MAPT	0
+MAPT2	-2.89298e-16
+MAPT3	-2.89298e-16
+MAPT_Family	0.141962
 IL8	0.524116
 GNAO1	0
 GNAI3	0
@@ -84,14 +87,14 @@ AP1	0
 mol:PIP3	0
 mol:LPA	0
 mol:IP3	0
-mol:GTP	-1.92865e-16
-mol:GDP	1.92865e-16
+mol:GTP	-0
+mol:GDP	-1.44649e-16
 mol:DAG	0
 mol:Ca2+	0
-mol:Ca ++	-9.64327e-17
+mol:Ca ++	0
 stress fiber formation	-1.49945
 positive regulation of mitosis	0.695857
-positive regulation of microtubule depolymerization	0
+positive regulation of microtubule depolymerization	0.141678
 positive regulation of dendritic cell cytokine production	0
 lamellipodium assembly	0.645483
 endothelial cell migration	0

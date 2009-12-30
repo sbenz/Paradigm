@@ -38,11 +38,11 @@
 # 37	parent9	genome
 # 38	parent9	mRNA
 # 39	parent9	protein
-# 40	child__0	mRNA
-# 41	child__1	mRNA
-# 42	child__2	mRNA
-# 43	child__0__0	mRNA
-# 44	child__0__1	mRNA
+# 40	child__0	active
+# 41	child__1	active
+# 42	child__2	active
+# 43	child__0__0	active
+# 44	child__0__1	active
 35
 
 2
