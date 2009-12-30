@@ -345,10 +345,10 @@ void PathwayTab::splitNodeParents(const Node& n, const size_t maxParents) {
     for (size_t i = 0; i < numNodes; ++i) {
       stringstream s;
       s << n.first << "__" << i;
-      Node newNode(s.str(), n.second);
+      Node newNode(s.str(), "active");
 
       newNodes.push_back(newNode);
-      addEntity(newNode.first, _entities[n.second]);
+      addEntity(newNode.first, "node_split");
     }
     
     // Step 2 of 4: connect parents to intermediate nodes
