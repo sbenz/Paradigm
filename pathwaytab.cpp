@@ -54,8 +54,7 @@ void RepressorDominatesVoteFactorGenerator::generateValues(const vector< string 
   for (size_t i = 0; i < edge_types.size(); ++i) {
     dims.push_back(PathwayTab::VARIABLE_DIMENSION);
   }
-  dai::MultiFor s(dims);
-  for ( ; s.valid(); ++s) {
+  for (dai::multifor s(dims); s.valid(); ++s) {
     std::vector< size_t > votes(PathwayTab::VARIABLE_DIMENSION,0);
     for (size_t i = 0; i < dims.size(); ++i) {
       if (edge_types[i] == "negative") {
@@ -80,9 +79,8 @@ void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& e
   for (size_t i = 0; i < edge_types.size(); ++i) {
     dims.push_back(PathwayTab::VARIABLE_DIMENSION);
   }
-  dai::MultiFor s(dims);
 
-  for ( ; s.valid(); ++s) {
+  for (dai::multifor s(dims); s.valid(); ++s) {
 	size_t highestIndex = s[0];
     for (size_t i = 0; i < edge_types.size(); ++i) {
 	  if(s[i] > highestIndex)
@@ -495,7 +493,7 @@ void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
       props.Set("total_dim", sp_total_dim[i][j]);
       props.Set("target_dim", VARIABLE_DIMENSION);
       ParameterEstimation* pe;
-      pe = ParameterEstimation::construct("ConditionalProbEstimation", props);
+      pe = ParameterEstimation::construct("CondProbEstimation", props);
       spvec.push_back(SharedParameters(var_orders[i][j], pe, 1));
     }
     if (spvec.size() > 0) {

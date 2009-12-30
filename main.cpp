@@ -39,8 +39,8 @@ void die(string msg)
 
 inline double log10odds(double post,double prior) 
 { 
-  return log( ( post / (1.0 - post) ) 
-	      / ( prior / (1.0 - prior) ) ) 
+  return std::log( ( post / (1.0 - post) ) 
+		   / ( prior / (1.0 - prior) ) ) 
     / log(10); 
 }
 
@@ -136,8 +136,8 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 }
 
 void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
-  out << "> em_iters=" << em.getCurrentIters() 
-      << " logZ=" << em.getLogZ() << endl;
+  out << "> em_iters=" << em.Iterations() 
+      << " logZ=" << em.logZ() << endl;
   for (EMAlg::s_iterator m = em.s_begin(); m != em.s_end(); ++m) {
     for (MaximizationStep::iterator pit = m->begin(); pit != m->end(); ++pit) {
       vector< Var > vars;
@@ -156,7 +156,7 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
 	}
       }
       out << endl;
-      for(MultiFor s(dims); s.valid(); ++s) {
+      for(multifor s(dims); s.valid(); ++s) {
 	for (size_t state = 0; state < dims.size(); ++state) {
 	  out << s[state] << '\t';
 	}
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
   // Read in evidence
   vector<EvidenceSource> evid;
   map<string,size_t> sampleMap;
-  vector<Observation> sampleData;
+  vector<Evidence::Observation> sampleData;
   for(size_t i = 0; i < conf.evidenceSize(); i++) {
     EvidenceSource e(conf.evidence(i), batchPrefix);
     if(VERBOSE)
@@ -283,30 +283,30 @@ int main(int argc, char *argv[])
   FactorGraph *testGraphConnected = new FactorGraph(factors);
   while(!testGraphConnected->isConnected())
   {
-	map< long, bool > nodesInSubNet = nodesInSingleNet(factors);
-	long backNode = nodesInSubNet.rbegin()->first;
+    map< long, bool > nodesInSubNet = nodesInSingleNet(factors);
+    long backNode = nodesInSubNet.rbegin()->first;
     VarSet I_vars;
-	I_vars |= Var(backNode, PathwayTab::VARIABLE_DIMENSION);
-	bool addedLink = false;
-	// now go find ones that aren't connected to this
-	vector< Factor >::iterator factorIter;
-	for ( factorIter = factors.begin(); !addedLink && factorIter != factors.end(); ++factorIter) {
-	  const VarSet tmpVars = factorIter->vars();
-	  vector< Var >::const_iterator tmpVarsIter;
-	  for (tmpVarsIter = tmpVars.begin(); !addedLink && tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
-		const long varLabel = tmpVarsIter->label();
-		if(!nodesInSubNet[varLabel])
-		{
-		  I_vars |= Var(varLabel, PathwayTab::VARIABLE_DIMENSION);
-		  
-		  factors.push_back( Factor( I_vars, 1.0 ) );
-		  addedLink = true;
-		}
-	  }	
-	}
-	break;
-	delete testGraphConnected;
-	testGraphConnected = new FactorGraph(factors);
+    I_vars |= Var(backNode, PathwayTab::VARIABLE_DIMENSION);
+    bool addedLink = false;
+    // now go find ones that aren't connected to this
+    vector< Factor >::iterator factorIter;
+    for ( factorIter = factors.begin(); !addedLink && factorIter != factors.end(); ++factorIter) {
+      const VarSet tmpVars = factorIter->vars();
+      vector< Var >::const_iterator tmpVarsIter;
+      for (tmpVarsIter = tmpVars.begin(); !addedLink && tmpVarsIter != tmpVars.end(); ++tmpVarsIter) {
+	const long varLabel = tmpVarsIter->label();
+	if(!nodesInSubNet[varLabel])
+	  {
+	    I_vars |= Var(varLabel, PathwayTab::VARIABLE_DIMENSION);
+	    
+	    factors.push_back( Factor( I_vars, 1.0 ) );
+	    addedLink = true;
+	  }
+      }	
+    }
+    break;
+    delete testGraphConnected;
+    testGraphConnected = new FactorGraph(factors);
   }
   delete testGraphConnected;
   
@@ -343,8 +343,11 @@ int main(int argc, char *argv[])
   map<string, size_t>::iterator sample_iter = sampleMap.begin();
   for ( ; sample_iter != sampleMap.end(); ++sample_iter) {
     InfAlg* clamped = prior->clone();
-    
-    sampleData[sample_iter->second].applyEvidence(*clamped);
+    Evidence::Observation *e = &sampleData[sample_iter->second];
+    for (Evidence::Observation::const_iterator i = e->begin(); i != e->end(); ++i) {
+      clamped->clamp( clamped->fg().findVar(i->first), i->second);
+    }
+    clamped->init();
     clamped->run();
     
     outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG, 

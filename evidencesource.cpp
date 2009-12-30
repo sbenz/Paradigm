@@ -144,7 +144,7 @@ double stringToDouble(const string& s) {
 
 void EvidenceSource::loadFromFile(PathwayTab& p, 
 				  map<string, size_t>& sampleMap, 
-				  vector<Observation>& sampleData) 
+				  vector<Evidence::Observation>& sampleData) 
 {
   ifstream infile;
   infile.open( _evidenceFile.c_str() );
@@ -183,10 +183,10 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
 	double evidence = stringToDouble(vals[i]);
 	if (sampleMap.count(sample) == 0) {
 	  sampleMap[sample] = sampleData.size();
-	  sampleData.push_back(Observation());
+	  sampleData.push_back(Evidence::Observation());
 	}
 	size_t sample_idx = sampleMap[sample];
-	sampleData[sample_idx].addObservation(vars[i], discCutoffs(evidence));
+	sampleData[sample_idx][vars[i]] = discCutoffs(evidence);
       }
     }
     infile.close();

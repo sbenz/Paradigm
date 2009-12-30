@@ -87,7 +87,7 @@ public:
 
   void loadFromFile(PathwayTab& p, 
 		    map<string, size_t>& sampleMap, 
-		    vector<Observation>& sampleData);
+		    vector<Evidence::Observation>& sampleData);
 
   const string& evidenceFile() {return _evidenceFile;}
   const vector<string>& sampleNames() {return _sampleNames;}

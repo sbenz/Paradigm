@@ -48,8 +48,8 @@ RunConfiguration::addConfigurations(std::istream& is)
       } else if (type == EVIDENCE_CONF_TOKEN) {
 	_evidences.push_back(conf);
       } else if (type == EM_STEP_CONF_TOKEN) {
-	std::vector<PropertyKey> keys = conf.keys();
-	std::vector<PropertyKey>::iterator i = keys.begin();
+	std::set<PropertyKey> keys = conf.keys();
+	std::set<PropertyKey>::iterator i = keys.begin();
 	EMStep e;
 	for ( ; i != keys.end(); ++i) {
 	  std::vector< std::string > edges;
