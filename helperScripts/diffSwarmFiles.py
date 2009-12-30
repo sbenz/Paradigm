@@ -40,6 +40,8 @@ def getInputStream(source):
         return open(source)               
     except (IOError, OSError):            
         pass                              
+    if (source == '-'):
+        return sys.stdin
     import StringIO                       
     return StringIO.StringIO(str(source)) 
 
