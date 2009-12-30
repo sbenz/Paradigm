@@ -43,6 +43,9 @@ pathwaytab2daifg: pathwaytab2daifg.o ${OBJECTS}
 clean:
 	rm -f ${EXECUTABLES} ${ALLOBJECTS} $(ALLSOURCES:.cpp=.d)
 
+tests: $(EXECUTABLES)
+	cd testdata && sh runtests.sh
+
 %.d: %.cpp
 	@set -e; rm -f $@; \
 	$(CXX) -M $(CPPFLAGS) $< > $@.$$$$; \
