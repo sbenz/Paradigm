@@ -50,11 +50,9 @@ clean:
 tests: $(EXECUTABLES)
 	cd testdata && sh runtests.sh
 
-%.o: %.cpp $(DEPDIR)
+%.o: %.cpp
+	mkdir -p $(DEPDIR)
 	$(COMPILE.cpp) -MMD -MF $(DF) $(OUTPUT_OPTION) $<
-
-$(DEPDIR):
-	mkdir -p $@
 
 TAGS:
 	etags *.h *.cpp
