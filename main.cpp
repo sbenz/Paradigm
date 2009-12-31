@@ -135,16 +135,23 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
     }
 }
 
-void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
+void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway,
+			    const vector< vector < SharedParameters::FactorOrientations > > &var_orders) {
   out << "> em_iters=" << em.Iterations() 
       << " logZ=" << em.logZ() << endl;
-  for (EMAlg::s_iterator m = em.s_begin(); m != em.s_end(); ++m) {
-    for (MaximizationStep::iterator pit = m->begin(); pit != m->end(); ++pit) {
-      vector< Var > vars;
-      vector< Real > vals;
+  size_t i = 0;
+  for (EMAlg::s_iterator m = em.s_begin(); m != em.s_end(); ++m, ++i) {
+    size_t j = 0;
+    for (MaximizationStep::iterator pit = m->begin(); pit != m->end(); 
+	 ++pit, ++j) {
+      SharedParameters::FactorOrientations::const_iterator fo 
+	= var_orders[i][j].begin();
+      const vector< Var >& vars  = fo->second;
+      Permute perm(fo->second);
+      const Factor f = em.eStep().fg().factor(fo->first);
       vector< size_t > dims;
 
-      pit->collectParameters(em.eStep().fg(), vals, vars);
+      // Output column headers
       for (size_t vi = 0; vi < vars.size(); ++vi) {
 	dims.push_back(vars[vi].states());
 	if (vi == 0) {
@@ -155,12 +162,13 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway) {
 	      << '\'';
 	}
       }
+      // Output actual parameters
       out << endl;
       for(multifor s(dims); s.valid(); ++s) {
 	for (size_t state = 0; state < dims.size(); ++state) {
 	  out << s[state] << '\t';
 	}
-	out << vals[(size_t)s] << endl;
+	out << f[perm.convertLinearIndex((size_t)s)] << endl;
       }
     }
   }
@@ -276,7 +284,8 @@ int main(int argc, char *argv[])
   // Construct the factor graph
   vector< Factor > factors;
   vector< MaximizationStep > msteps;
-  pathway.constructFactors(conf.emSteps(), factors, msteps);
+  vector< vector < SharedParameters::FactorOrientations > > var_orders;
+  var_orders = pathway.constructFactors(conf.emSteps(), factors, msteps);
   map< long, string > outNodes = pathway.getOutputNodeMap();
   
   // add in additional factors to link disconnected pieces of the pathway
@@ -326,7 +335,7 @@ int main(int argc, char *argv[])
   while(!em.hasSatisfiedTermConditions()) {
     em.iterate();
     if (VERBOSE) {
-      outputEmInferredParams(cerr, em, pathway);
+      outputEmInferredParams(cerr, em, pathway, var_orders);
     }
   }
   em.run();
@@ -334,7 +343,7 @@ int main(int argc, char *argv[])
   ofstream paramsOutputStream;
   paramsOutputStream.open(paramsOutputFile.c_str());
   if (paramsOutputStream.is_open()) {
-    outputEmInferredParams(paramsOutputStream, em, pathway);
+    outputEmInferredParams(paramsOutputStream, em, pathway, var_orders);
   }
   prior->run();
   

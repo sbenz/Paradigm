@@ -157,7 +157,8 @@ public:
   void generateFactorValues(const Node& child, 
 			    const vector< string >& edge_types,
 			    vector< Real >& outValues) const;
-  void constructFactors(const RunConfiguration::EMSteps& sp,
+  vector< vector < SharedParameters::FactorOrientations > >
+  constructFactors(const RunConfiguration::EMSteps& sp,
 			vector< Factor >& outFactors, 
 			vector< MaximizationStep >& outMsteps) const;
   map< long, string > getOutputNodeMap();  

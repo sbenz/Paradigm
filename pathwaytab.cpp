@@ -396,9 +396,10 @@ void PathwayTab::generateFactorValues(const Node& child,
   }
 }
 
-void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
-				  vector< Factor >& outFactors,
-				  vector< MaximizationStep >& outMsteps) const{
+vector< vector < SharedParameters::FactorOrientations > >
+PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
+			     vector< Factor >& outFactors,
+			     vector< MaximizationStep >& outMsteps) const{
   vector< vector < SharedParameters::FactorOrientations > > var_orders;
   vector< vector < size_t > > sp_total_dim;
   var_orders.resize(sp.size());
@@ -503,6 +504,7 @@ void PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
 	   << " had no matching nodes in the pathway" << endl;
     }
   }
+  return var_orders;
 }
 
 map< long, string > PathwayTab::getOutputNodeMap() {
