@@ -30,9 +30,12 @@ ALLOBJECTS=$(ALLSOURCES:.cpp=.o)
 
 EXECUTABLES=hgFactorGraph pathwaytab2daifg
 
+DEPDIR=.deps
+DF=$(DEPDIR)/$(*).d
+
 all: $(EXECUTABLES)
 
-include $(ALLSOURCES:.cpp=.d)
+-include $(addprefix $(DEPDIR)/,$(ALLSOURCES:.cpp=.d))
 
 hgFactorGraph: main.o ${OBJECTS} 
 	${CXX} ${CPPFLAGS} -o $@ $< ${OBJECTS} ${LIBFLAGS} 
@@ -41,17 +44,17 @@ pathwaytab2daifg: pathwaytab2daifg.o ${OBJECTS}
 	${CXX} ${CPPFLAGS} -o $@ $< ${OBJECTS} ${LIBFLAGS} 
 
 clean:
-	rm -f ${EXECUTABLES} ${ALLOBJECTS} $(ALLSOURCES:.cpp=.d)
+	rm -f ${EXECUTABLES} ${ALLOBJECTS}
+	rm -Rf $(DEPDIR)
 
 tests: $(EXECUTABLES)
 	cd testdata && sh runtests.sh
 
-%.d: %.cpp
-	@set -e; rm -f $@; \
-	$(CXX) -M $(CPPFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+%.o: %.cpp $(DEPDIR)
+	$(COMPILE.cpp) -MMD -MF $(DF) $(OUTPUT_OPTION) $<
 
+$(DEPDIR):
+	mkdir -p $@
 
 TAGS:
 	etags *.h *.cpp
