@@ -14,14 +14,17 @@ int main(int argc, char** argv) {
   }
 
   ifstream path_stream(argv[1]);
-  PropertySet p;
-  if (argc == 3) {
-    RunConfiguration c(argv[2]);
-    p = c.pathwayProps();
-  }
-  PathwayTab path = PathwayTab::create(path_stream, p);
+  RunConfiguration c(argc == 3 ? argv[2] : "/dev/null");
+  PathwayTab path = PathwayTab::create(path_stream, c.pathwayProps());
+  
+  vector< Factor > factors;
+  vector< MaximizationStep > msteps;
+  
+  path.constructFactors(c.emSteps(), factors, msteps);
+
+  FactorGraph fg(factors);
 
   path.printNodeMap();
-  path.printDaiFactorSection();
+  cout << fg;
   return 0;
 }

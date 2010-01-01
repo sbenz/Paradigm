@@ -257,7 +257,6 @@ int main(int argc, char *argv[])
     die("Could not open pathway stream");
   }
   PathwayTab pathway = PathwayTab::create(pathwayStream, conf.pathwayProps());
-  pathway.addFactorGenerator("family","active",new SingleMemberNeededFactorGenerator());
 
   // /////////////////////////////////////////////////
   // Read in evidence

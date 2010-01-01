@@ -92,6 +92,29 @@ void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& e
     }
   }
 }
+
+void AllMembersNeededFactorGenerator::generateValues(const vector< string >& edge_types, 
+						     vector< Real >& v) const {
+  Real minor = _epsilon / 2;
+  Real major = 1 - _epsilon;
+  vector< size_t > dims;
+  dims.reserve(edge_types.size());
+  for (size_t i = 0; i < edge_types.size(); ++i) {
+    dims.push_back(PathwayTab::VARIABLE_DIMENSION);
+  }
+
+  for (dai::multifor s(dims); s.valid(); ++s) {
+    size_t lowestindex = s[0];
+    for (size_t i = 0; i < edge_types.size(); ++i) {
+	  if(s[i] < lowestindex)
+		lowestindex = s[i];
+    }
+
+    for (size_t i = 0; i < PathwayTab::VARIABLE_DIMENSION; ++i) {
+	  v.push_back(i == lowestindex ? major : minor);
+    }
+  }
+}
 void readInteractionMap(istream& is, 
 			map< string, vector< string > >& out_imap) {
   string line;
@@ -173,6 +196,9 @@ PathwayTab::PathwayTab(istream& pathway_stream,
   for (v = interaction_lines.begin(); v != interaction_lines.end(); ++v) {
     addInteraction(v->at(0), v->at(1), v->at(2));
   }
+
+  addFactorGenerator("family","active",new SingleMemberNeededFactorGenerator());
+  addFactorGenerator("complex","active",new AllMembersNeededFactorGenerator());
 
   if (_props.hasKey("max_in_degree")) {
     int max_degree = props.getStringAs<int>("max_in_degree");
