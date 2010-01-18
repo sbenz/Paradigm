@@ -28,7 +28,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 ALLSOURCES=$(SOURCES) pathwaytab2daifg.cpp main.cpp
 ALLOBJECTS=$(ALLSOURCES:.cpp=.o)
 
-EXECUTABLES=hgFactorGraph pathwaytab2daifg
+EXECUTABLES=paradigm pathwaytab2daifg
 
 DEPDIR=.deps
 DF=$(DEPDIR)/$(*).d
@@ -37,7 +37,7 @@ all: $(EXECUTABLES)
 
 -include $(addprefix $(DEPDIR)/,$(ALLSOURCES:.cpp=.d))
 
-hgFactorGraph: main.o ${OBJECTS} 
+paradigm: main.o ${OBJECTS} 
 	${CXX} ${CPPFLAGS} -o $@ $< ${OBJECTS} ${LIBFLAGS} 
 
 pathwaytab2daifg: pathwaytab2daifg.o ${OBJECTS} 
