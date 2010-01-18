@@ -5,6 +5,9 @@
 #include <map>
 #include <dai/alldai.h>
 
+#include <sys/time.h>
+#include <sys/resource.h>
+
 #include "common.h"
 #include "configuration.h"
 #include "evidencesource.h"
@@ -26,8 +29,9 @@ void print_usage(int signal)
        << "C++ program for taking bioInt data and performing inference using libdai" << endl
        << "Note this can't be linked in to kent src as libDAI is GPL" << endl
        << "Valid options:" << endl
-			 << "\t-e emOutputFile" << endl
-       << "\t-v,--verbose : verbose mode" << endl;
+       << "\t-e emOutputFile" << endl
+       << "\t-m max_mem      : The maximum number of GB that can be allocated" << endl
+       << "\t-v,--verbose    : verbose mode" << endl;
   exit(signal);
 }
 
@@ -174,14 +178,31 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway,
   }
 }
 
+void setMaxMem(unsigned long maxmem) {
+  struct rlimit memlimits;
+  //  memlimits.rlim_cur = memlimits.rlim_max = 0x0C0000000; // 6 * 1024 * 1024 * 1024;
+  // memlimits.rlim_cur = memlimits.rlim_max = 3 * 1024 * 1024 * 1024UL;
+  memlimits.rlim_cur = memlimits.rlim_max = maxmem;
+  printf("rlim_t size is: %ld\n", sizeof(memlimits.rlim_cur));
+  printf("rlim_max size is: %ld\n", (memlimits.rlim_max));
+  setrlimit(RLIMIT_AS, &memlimits);
+}
+
+void setMaxMemGigs(char * maxmem) {
+  double md = strtod(maxmem, NULL);
+  unsigned long mul = (unsigned long)(md * 1024 * 1024 * 1024);
+  setMaxMem(mul);
+}
+
 int main(int argc, char *argv[])
 {
-  const char* const short_options = "hp:b:c:e:o:v";
+  const char* const short_options = "hp:b:c:e:m:o:v";
   const struct option long_options[] = {
     { "batch", 0, NULL, 'b' },
     { "config", 0, NULL, 'c' },
     { "pathway", 0, NULL, 'p' },
     { "em", 0, NULL, 'e' },
+    { "maxmem", 0, NULL, 'm' },
     { "output", 0, NULL, 'o' },
     { "help", 0, NULL, 'h' },
     { "verbose", 0, NULL, 'v' },
@@ -206,6 +227,7 @@ int main(int argc, char *argv[])
     case 'c': configFile = optarg; break;
     case 'p': pathwayFilename = optarg; break;
     case 'e': paramsOutputFile = optarg; break;
+    case 'm': setMaxMemGigs(optarg); break;
     case 'o': actOutFile = optarg; break;
 	case 'v': VERBOSE = true; break;
     }
