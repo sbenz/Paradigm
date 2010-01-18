@@ -20,7 +20,7 @@ for P in ${DIRECTORY}/*_pathway.tab; do
     for F in ${DIRECTORY}/${INFIX}_*CNV.tab; do
 	T=`echo $F | sed "s/_CNV.tab//g"`
 	B=`basename $T`
-	echo "/hive/users/${USER}/bin/hgFactorGraph -p ${P} -b ${T} -c ${OUTDIR}/config.txt -e $OUTDIR/${B}_learned_parameters.fa -o $OUTDIR/${B}_output.fa"
+	echo "/hive/users/${USER}/bin/paradigm -p ${P} -b ${T} -c ${OUTDIR}/config.txt -e $OUTDIR/${B}_learned_parameters.fa -o $OUTDIR/${B}_output.fa"
     done
 
 done
