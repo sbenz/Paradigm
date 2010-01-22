@@ -23,9 +23,13 @@ using namespace dai;
 
 void print_usage(int signal)
 {
-  cerr << "hgFactorGraph" << endl
+  cerr << "paradigm" 
+#ifdef VERSION
+       << " -- " << VERSION 
+#endif
+       << endl
        << "Usage:" << endl
-       <<"  hgFactorGraph [options] -p path.tab -c cfg.txt -b prefix" << endl
+       <<"  paradigm [options] -p path.tab -c cfg.txt -b prefix" << endl
        << "C++ program for taking bioInt data and performing inference using libdai" << endl
        << "Note this can't be linked in to kent src as libDAI is GPL" << endl
        << "Valid options:" << endl

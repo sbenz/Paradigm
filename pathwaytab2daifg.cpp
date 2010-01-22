@@ -3,7 +3,12 @@
 #include "pathwaytab.h"
 
 void usage(int exit_code) {
-  cout << "Usage: " << endl
+  cout << "pathwaytab2daifg"
+#ifdef VERSION
+       << " -- " << VERSION
+#endif
+       << endl
+       << "Usage: " << endl
        << "  pathwaytab2daifg pathway_file [config_file]"<< endl;
   exit(exit_code);
 }
