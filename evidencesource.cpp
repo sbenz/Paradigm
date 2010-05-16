@@ -161,7 +161,10 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
     vars.reserve(header.size());
 
     for (size_t h = 0; h < header.size(); h++) {
-      vars.push_back(p.addObservationNode(header[h], attachPoint, _suffix));
+	  if(p.getEntityType(header[h]) == "protein") // skip adding evidence if it's not in the pathway
+	  {
+	      vars.push_back(p.addObservationNode(header[h], attachPoint, _suffix));
+	  }
     }
 
     FactorGenerator* fgen = new EvidenceFactorGen(options);
@@ -170,16 +173,19 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
     while(getline(infile,line)) {
       vector<string> vals;
       Tokenize(line,vals,"\t");
-      if (vals.size() > vars.size() + 1) {
-	THROW("Entries in evidence line does not match header length");
+      if (vals.size() > header.size() + 1) {
+		THROW("Entries in evidence line does not match header length");
       }
       string sample = vals[0];
       _sampleNames.push_back(sample);
       vals.erase(vals.begin());
       
       for(size_t i = 0; i < vals.size(); i++) {
+	if(p.getEntityType(header[i]) != "protein") // skip adding evidence if it's not in the pathway
+	  continue;
 	if(strcmp(vals[i].c_str(),"NA")==0)
 	  continue;
+
 	double evidence = stringToDouble(vals[i]);
 	if (sampleMap.count(sample) == 0) {
 	  sampleMap[sample] = sampleData.size();

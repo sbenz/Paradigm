@@ -137,7 +137,10 @@ public:
     map< Node, size_t >::const_iterator i = _nodemap.find(n);
     return i->second;
   }
-
+  string getEntityType(const string& entity) {
+	return _entities[entity];
+  }
+ 
   void dumpNodeIndexMap() const;
 
   string getInteraction(size_t child_i, size_t parent_i) const {
