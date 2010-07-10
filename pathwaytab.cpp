@@ -517,8 +517,8 @@ PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
 	continue;
       }
       PropertySet props;
-      props.Set("total_dim", sp_total_dim[i][j]);
-      props.Set("target_dim", VARIABLE_DIMENSION);
+      props.set("total_dim", sp_total_dim[i][j]);
+      props.set("target_dim", VARIABLE_DIMENSION);
       ParameterEstimation* pe;
       pe = ParameterEstimation::construct("CondProbEstimation", props);
       spvec.push_back(SharedParameters(var_orders[i][j], pe, 1));

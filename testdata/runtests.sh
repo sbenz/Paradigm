@@ -15,13 +15,13 @@ echo Testing use of different FactorGenerators, should take seconds
     | diff complex_family_pathway.tab.out - || exit 1
 
 echo Testing inference, should take less than a minute
-/usr/bin/time ../hgFactorGraph -c noem.cfg -p small_pid_66_pathway.tab -b small_pid_66 \
+/usr/bin/time ../paradigm -c noem.cfg -p small_pid_66_pathway.tab -b small_pid_66 \
     | python ../helperScripts/diffSwarmFiles.py noem.cfg.out -\
     | diff - /dev/null \
     || exit 1
 
 echo Testing EM, should take approximately five minutes
-/usr/bin/time ../hgFactorGraph -c em_simple.cfg -p small_pid_66_pathway.tab -b small_pid_66 \
+/usr/bin/time ../paradigm -c em_simple.cfg -p small_pid_66_pathway.tab -b small_pid_66 \
     | python ../helperScripts/diffSwarmFiles.py em_simple.cfg.out -\
     | diff - /dev/null \
     || exit 1

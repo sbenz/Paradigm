@@ -1,107 +1,107 @@
-> sample_2 loglikelihood=-35.2715
+> sample_2 loglikelihood=-35.2815
 LPAR3	0
 LPAR2	0
 HBEGF	0
-ARHGEF1	0.0432785
+ARHGEF1	0
 LPAR1	0
-ADCY4	0.0119232
-UniProt:Q5VWL0	0.000615787
-TRIP6	0.04149
+ADCY4	0
+UniProt:Q5VWL0	-0.000141333
+TRIP6	0.0465932
 SLC9A3R2	0
 GNA13	0
-PTK2B	-0.00610888
+PTK2B	0
 GAB1	0
-TIAM1	-0.0166197
-ADCY1	0.0290892
+TIAM1	0
+ADCY1	0.0377793
 ADCY2	0
 UniProt:Q05655	0
-PTK2	-0.113738
+PTK2	-0.0883241
 RELA	0
-GNA12	0.141156
+GNA12	0.138062
 PRKCE	0
 PLCB3	0
-GNAI1	0.0278954
-RAC1	0.136063
+GNAI1	0.0759286
+RAC1	0.133717
 GNB1	0
-RHOA	0.0271098
-GNG2	0.1403
-UniProt:P56945	2.89298e-16
+RHOA	0
+GNG2	0.137811
+UniProt:P56945	-9.64327e-17
 ADCY7	0
 GNAQ	0
 GSK3B	0
-PXN	-0.078944
+PXN	-0.0387132
 CASP3	0
 PIK3CB	0
-ADCY8	0.0119232
-AKT1	0.034083
+ADCY8	0
+AKT1	0
 UniProt:P30679	0
 GNA11	0
 UniProt:P29777	0
 PIK3R1	0
-NFKBIA	-0.0235156
+NFKBIA	0
 NFKB1	0
 PLCG1	0
 GNAZ	0
-UniProt:P14780	-2.89298e-16
-SRC	0.14133
+UniProt:P14780	-1.92865e-16
+SRC	0.138297
 MAPT	0
-MAPT2	-0
-MAPT3	-0
+MAPT2	9.64327e-17
+MAPT3	9.64327e-17
 MAPT_Family	0
-IL8	-0.00576716
+IL8	0.0632904
 GNAO1	0
 GNAI3	0
 MMP2	0
-LYN	-0.0235156
+LYN	0
 JUN	0
 GNAI2	0
 HRAS	0
 FOS	0
-EGFR	0.136063
+EGFR	0.133717
 GNA14	0
-ADCY5	0.0119232
-ADCY9	0.0119232
+ADCY5	0
+ADCY9	0
 ADCY3	0
-ADCY6	0.0119232
+ADCY6	0
 PLD2	0
-TRIP6/p130 Cas/FAK1/Paxillin	-0.0819893
-Rac1/GTP	0.0528283
-Rac1/GDP	0.0572725
-PI3K-beta	0.0274758
-NF kappa B1 p50/RelA/I kappa B alpha	-0.0398151
-NF kappa B1 p50/RelA	-0.0128878
+TRIP6/p130 Cas/FAK1/Paxillin	-0.0553135
+Rac1/GTP	0.0414536
+Rac1/GDP	0.0958771
+PI3K-beta	0
+NF kappa B1 p50/RelA/I kappa B alpha	0
+NF kappa B1 p50/RelA	0
 LPA/LPA3	0
 LPA/LPA2/NHERF2	0
 LPA/LPA2/MAGI-3	0
 LPA/LPA2	0
 LPA/LPA1-2-3	0
 LPA/LPA1	0
-HRAS/GTP	0.0157624
+HRAS/GTP	0
 HRAS/GDP	0
-HB-EGF/EGFR	0.0290833
-Gi(beta/gamma)	0.022422
-GNB1/GNG2	0.0408339
-G12/G13	0.0412788
+HB-EGF/EGFR	0.0903106
+Gi(beta/gamma)	0.0641895
+GNB1/GNG2	0.0485718
+G12/G13	0.0480697
 EGFR/PI3K-beta/Gab1	0
 AP1	0
-mol:PIP3	0.0146552
+mol:PIP3	0
 mol:LPA	0
 mol:IP3	0
-mol:GTP	0
-mol:GDP	-1.44649e-16
+mol:GTP	-1.92865e-16
+mol:GDP	0
 mol:DAG	0
 mol:Ca2+	0
-mol:Ca ++	1.92865e-16
-stress fiber formation	-0.0785924
-positive regulation of mitosis	0.0157364
+mol:Ca ++	-0
+stress fiber formation	-0.0382376
+positive regulation of mitosis	0
 positive regulation of microtubule depolymerization	0
 positive regulation of dendritic cell cytokine production	0
-lamellipodium assembly	0.0527265
+lamellipodium assembly	0.0400106
 endothelial cell migration	0
-contractile ring contraction involved in cytokinesis	0.0270632
-cell migration	-0.0322433
-cAMP biosynthetic process	-0.0151874
-arachidonic acid secretion	0.0157364
+contractile ring contraction involved in cytokinesis	0
+cell migration	-0.0407879
+cAMP biosynthetic process	-0.0224713
+arachidonic acid secretion	0
 apoptosis	0
-MAPKKK cascade	0.0157364
-JNK cascade	2.89298e-16
+MAPKKK cascade	0
+JNK cascade	1.92865e-16

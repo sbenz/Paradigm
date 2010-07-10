@@ -26,7 +26,7 @@ RunConfiguration::getInferenceProperties(const std::string& pathway_filename)
 	  return _inferences[i];
 	}
 
-      std::string m = _inferences[i].GetAs<std::string>(INFERENCE_MATCH_TOKEN);
+      std::string m = _inferences[i].getAs<std::string>(INFERENCE_MATCH_TOKEN);
       if (pathway_filename.find(m) != std::string::npos)
 	{
 	  return _inferences[i];
@@ -53,7 +53,7 @@ RunConfiguration::addConfigurations(std::istream& is)
 	EMStep e;
 	for ( ; i != keys.end(); ++i) {
 	  std::vector< std::string > edges;
-	  tokenizeString(conf.GetAs<std::string>(*i), edges, ";");
+	  tokenizeString(conf.getAs<std::string>(*i), edges, ";");
 	  SmallSet< std::string > s(edges.begin(), edges.end(), edges.size());
 	  e[*i] = s;
 	}

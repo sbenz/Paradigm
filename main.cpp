@@ -113,7 +113,7 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
       vector<double> posteriors;
       bool beliefEqualOne = false;
       
-      for (size_t j = 0; j < belief.states(); ++j)
+      for (size_t j = 0; j < belief.nrStates(); ++j)
 	{
 	  if(belief[j] == 1 || priorBelief[j] == 1)
 	    {
@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
   FactorGraph priorFG(factors);
 
   PropertySet inferenceOptions = conf.getInferenceProperties(pathwayFilename);
-  std::string method = inferenceOptions.GetAs<std::string>("method");
+  std::string method = inferenceOptions.getAs<std::string>("method");
   
   InfAlg* prior = newInfAlg(method, priorFG, inferenceOptions);
   prior->init();

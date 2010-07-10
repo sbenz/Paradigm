@@ -36,7 +36,7 @@ public:
 
   /// Default constructor
   RunConfiguration() : _inferences(), _evidences(), _emsteps(), _em(), _path(){
-    _em.Set("max_iters", 0);
+    _em.set("max_iters", 0);
   }
 
   /// Copy constructor

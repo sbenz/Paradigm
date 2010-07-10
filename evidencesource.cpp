@@ -88,17 +88,17 @@ EvidenceSource::EvidenceSource(PropertySet &p, string base) :
   _evidenceFile()
 {
   if (p.hasKey("disc"))
-    setCutoffs(p.GetAs<string>("disc"));
+    setCutoffs(p.getAs<string>("disc"));
   else
     setCutoffs("-1.3,1.3");
 
   if (p.hasKey("node"))
-    attachPoint = p.GetAs<string>("node");
+    attachPoint = p.getAs<string>("node");
   else
     THROW("EvidenceSource conf. is missing the required property \"node\"");
 
   if (p.hasKey("suffix")) {
-    _suffix = p.GetAs<string>("suffix");
+    _suffix = p.getAs<string>("suffix");
     _evidenceFile = base + _suffix;
   } else {
     THROW("EvidenceSource conf. is missing the required property \"suffix\"");
