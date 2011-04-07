@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #include <fstream>
 
 #include "pathwaytab.h"
@@ -21,10 +29,10 @@ int main(int argc, char** argv) {
   ifstream path_stream(argv[1]);
   RunConfiguration c(argc == 3 ? argv[2] : "/dev/null");
   PathwayTab path = PathwayTab::create(path_stream, c.pathwayProps());
-  
+
   vector< Factor > factors;
   vector< MaximizationStep > msteps;
-  
+
   path.constructFactors(c.emSteps(), factors, msteps);
 
   FactorGraph fg(factors);

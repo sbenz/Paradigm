@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #ifndef HEADER_EVIDENCESOURCE_H
 #define HEADER_EVIDENCESOURCE_H
 
@@ -16,14 +24,14 @@ public:
 
   EvidenceFactorGen(const PropertySet& p);
   ~EvidenceFactorGen() {}
-  
-  void generateValues(const vector< string >& edge_types, 
+
+  void generateValues(const vector< string >& edge_types,
 		      vector< Real >& outVals) const;
 };
 
 typedef map<string, map<string,int> > SampleEvidMap;
 
-class EvidenceSource 
+class EvidenceSource
 {
 private:
   vector<double> cutoffs;
@@ -40,8 +48,8 @@ private:
 
 public:
   /// Default constructor
-  EvidenceSource() : cutoffs(), 
-		     attachPoint(), 
+  EvidenceSource() : cutoffs(),
+		     attachPoint(),
 		     _suffix(),
 		     _evidenceFile(),
 		     _disc(),
@@ -53,16 +61,16 @@ public:
     setCutoffs("-1.3;1.3");
   }
   /// Copy constructor
-  EvidenceSource(const EvidenceSource &x) 
-  : cutoffs(x.cutoffs), 
-    attachPoint(x.attachPoint), 
+  EvidenceSource(const EvidenceSource &x)
+  : cutoffs(x.cutoffs),
+    attachPoint(x.attachPoint),
     _suffix(x._suffix),
     _evidenceFile(x._evidenceFile),
     _disc(x._disc),
     _sampleNames(x._sampleNames),
     _sampleFactors(x._sampleFactors),
     _sampleFactorNum(x._sampleFactorNum) {}
-  
+
   /// Assignment operator
   EvidenceSource& operator=(const EvidenceSource &x) {
     if (this != &x) {
@@ -83,10 +91,10 @@ public:
   EvidenceSource(PropertySet &p, string base);
 
   void setCutoffs(string discLimits);
-  int discCutoffs (float x);  
+  int discCutoffs (float x);
 
-  void loadFromFile(PathwayTab& p, 
-		    map<string, size_t>& sampleMap, 
+  void loadFromFile(PathwayTab& p,
+		    map<string, size_t>& sampleMap,
 		    vector<Evidence::Observation>& sampleData);
 
   const string& evidenceFile() {return _evidenceFile;}

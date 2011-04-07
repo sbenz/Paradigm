@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #ifndef HEADER_PATHWAYTAB_H
 #define HEADER_PATHWAYTAB_H
 
@@ -19,7 +27,7 @@ using namespace dai;
 
 class FactorGenerator {
 public:
-  virtual void generateValues(const vector< string >& edge_types, 
+  virtual void generateValues(const vector< string >& edge_types,
 			      vector< Real >& outVals) const = 0;
   virtual ~FactorGenerator() {}
 };
@@ -28,10 +36,10 @@ class RepressorDominatesVoteFactorGenerator : public FactorGenerator{
 private:
   Real _epsilon;
 public:
-  RepressorDominatesVoteFactorGenerator(double epsilon=0.001) : 
+  RepressorDominatesVoteFactorGenerator(double epsilon=0.001) :
     _epsilon(epsilon) {}
   ~RepressorDominatesVoteFactorGenerator() {}
-  void generateValues(const vector< string >& edge_types, 
+  void generateValues(const vector< string >& edge_types,
 		      vector< Real >& outVals) const;
 };
 
@@ -39,10 +47,10 @@ class SingleMemberNeededFactorGenerator : public FactorGenerator{
 private:
   Real _epsilon;
 public:
-  SingleMemberNeededFactorGenerator(double epsilon=0.001) : 
+  SingleMemberNeededFactorGenerator(double epsilon=0.001) :
     _epsilon(epsilon) {}
   ~SingleMemberNeededFactorGenerator() {}
-  void generateValues(const vector< string >& edge_types, 
+  void generateValues(const vector< string >& edge_types,
 		      vector< Real >& outVals) const;
 };
 
@@ -50,10 +58,10 @@ class AllMembersNeededFactorGenerator : public FactorGenerator{
 private:
   Real _epsilon;
 public:
-  AllMembersNeededFactorGenerator(double epsilon=0.001) : 
+  AllMembersNeededFactorGenerator(double epsilon=0.001) :
     _epsilon(epsilon) {}
   ~AllMembersNeededFactorGenerator() {}
-  void generateValues(const vector< string >& edge_types, 
+  void generateValues(const vector< string >& edge_types,
 		      vector< Real >& outVals) const;
 };
 
@@ -84,16 +92,16 @@ private:
   map< Node, size_t > _nodemap;
   vector< Node > _nodevector;
   map< Node, map< Node, string > > _parents;
-  map< string, string > _entities;				
+  map< string, string > _entities;
   GeneProteinExpressionModel _dogma;
   map< string, vector< string > > _imap;
-  
+
   PropertySet _props;
   map< pair<string, string>, FactorGenerator* > _factorGenLookup;
   FactorGenerator* _defaultFactorGen;
 
-  PathwayTab(istream& pathway_stream, 
-	     istream& imap_stream, 
+  PathwayTab(istream& pathway_stream,
+	     istream& imap_stream,
 	     istream& dogma_stream,
 	     const PropertySet& props);
 public:
@@ -111,9 +119,9 @@ public:
     }
     return PathwayTab(pathway_stream, *imap_stream, *dogma_stream, props);
   }
-		      
-  ~PathwayTab() { 
-    delete _defaultFactorGen; 
+
+  ~PathwayTab() {
+    delete _defaultFactorGen;
     map< pair<string, string>, FactorGenerator* >::iterator i;
     i= _factorGenLookup.begin();
     for ( ; i != _factorGenLookup.end(); ++i) {
@@ -124,7 +132,7 @@ public:
   void addEntity(const string& entity, const string& type="protein");
   Var addObservationNode(const string& entity, const string& on_type,
 			 const string& obstype);
-  void addInteraction(const string& entity_from, const string& entity_to, 
+  void addInteraction(const string& entity_from, const string& entity_to,
 		      const string& interaction);
 
   void addNode(Node nodename); // see also addEntity
@@ -140,7 +148,7 @@ public:
   string getEntityType(const string& entity) {
 	return _entities[entity];
   }
- 
+
   void dumpNodeIndexMap() const;
 
   string getInteraction(size_t child_i, size_t parent_i) const {
@@ -157,7 +165,7 @@ public:
     return result;
   }
 
-  void addFactorGenerator(const string& entity_type, 
+  void addFactorGenerator(const string& entity_type,
 			  const string& node_type,
 			  FactorGenerator* factor_gen);
 
@@ -168,14 +176,14 @@ public:
   void splitNodeParents(const Node& n, const size_t maxParents);
   void splitHighInDegree(const int maxParents);
 
-  void generateFactorValues(const Node& child, 
+  void generateFactorValues(const Node& child,
 			    const vector< string >& edge_types,
 			    vector< Real >& outValues) const;
   vector< vector < SharedParameters::FactorOrientations > >
   constructFactors(const RunConfiguration::EMSteps& sp,
-			vector< Factor >& outFactors, 
+			vector< Factor >& outFactors,
 			vector< MaximizationStep >& outMsteps) const;
-  map< long, string > getOutputNodeMap();  
+  map< long, string > getOutputNodeMap();
 };
 
 #endif

@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #include <map>
 #include <vector>
 #include <iostream>
@@ -10,7 +18,7 @@ using namespace std;
 
 const size_t PathwayTab::VARIABLE_DIMENSION = 3;
 
-const std::string PathwayTab::DEFAULT_INTERACTION_MAP = 
+const std::string PathwayTab::DEFAULT_INTERACTION_MAP =
   "-dt>	genome	mRNA	positive\n"
   "-dr>	mRNA	protein	positive\n"
   "-dp>	protein	active	positive\n"
@@ -27,7 +35,7 @@ const std::string PathwayTab::DEFAULT_INTERACTION_MAP =
   "member>	active	active	positive\n"
   ;
 
-const std::string PathwayTab::CENTRAL_DOGMA = 
+const std::string PathwayTab::CENTRAL_DOGMA =
   "genome	mRNA	-dt>\n"
   "mRNA	protein	-dr>\n"
   "protein	active	-dp>\n"
@@ -45,7 +53,7 @@ size_t countVotesRepressorDominates(size_t down, size_t up) {
   }
 }
 
-void RepressorDominatesVoteFactorGenerator::generateValues(const vector< string >& edge_types, 
+void RepressorDominatesVoteFactorGenerator::generateValues(const vector< string >& edge_types,
 							   vector< Real >& v) const {
   Real minor = _epsilon / 2;
   Real major = 1 - _epsilon;
@@ -70,7 +78,7 @@ void RepressorDominatesVoteFactorGenerator::generateValues(const vector< string 
   }
 }
 
-void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& edge_types, 
+void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& edge_types,
 							   vector< Real >& v) const {
   Real minor = _epsilon / 2;
   Real major = 1 - _epsilon;
@@ -93,7 +101,7 @@ void SingleMemberNeededFactorGenerator::generateValues(const vector< string >& e
   }
 }
 
-void AllMembersNeededFactorGenerator::generateValues(const vector< string >& edge_types, 
+void AllMembersNeededFactorGenerator::generateValues(const vector< string >& edge_types,
 						     vector< Real >& v) const {
   Real minor = _epsilon / 2;
   Real major = 1 - _epsilon;
@@ -115,7 +123,7 @@ void AllMembersNeededFactorGenerator::generateValues(const vector< string >& edg
     }
   }
 }
-void readInteractionMap(istream& is, 
+void readInteractionMap(istream& is,
 			map< string, vector< string > >& out_imap) {
   string line;
   while(getline(is, line)) {
@@ -145,7 +153,7 @@ GeneProteinExpressionModel::GeneProteinExpressionModel(istream& is)
   }
 }
 
-void GeneProteinExpressionModel::addGeneDogma(const string& genename, 
+void GeneProteinExpressionModel::addGeneDogma(const string& genename,
 					      PathwayTab& pathway_graph) {
   set< string >::iterator state_iterator = _states.begin();
   for ( ; state_iterator != _states.end(); ++state_iterator) {
@@ -159,8 +167,8 @@ void GeneProteinExpressionModel::addGeneDogma(const string& genename,
 }
 
 
-PathwayTab::PathwayTab(istream& pathway_stream, 
-		       istream& imap_stream, 
+PathwayTab::PathwayTab(istream& pathway_stream,
+		       istream& imap_stream,
 		       istream& dogma_stream,
 		       const PropertySet& props)
   : _nodemap(),
@@ -218,8 +226,8 @@ void PathwayTab::addEntity(const string& entity, const string& type) {
   }
 }
 
-Var PathwayTab::addObservationNode(const string& entity, 
-				   const string& on_type, 
+Var PathwayTab::addObservationNode(const string& entity,
+				   const string& on_type,
 				   const string& obs_type) {
   Node obs_node(entity, obs_type);
   Node hidden_node;
@@ -230,8 +238,8 @@ Var PathwayTab::addObservationNode(const string& entity,
   return Var(_nodemap[obs_node], VARIABLE_DIMENSION);
 }
 
-void PathwayTab::addInteraction(const string& entity_from, 
-				const string& entity_to, 
+void PathwayTab::addInteraction(const string& entity_from,
+				const string& entity_to,
 				const string& interaction) {
   if (_imap.count(interaction) == 0) {
     THROW("Unrecognized interaction type: " + interaction);
@@ -265,7 +273,7 @@ void PathwayTab::addEdge(const Node& from, const Node& to, const string& lbl) {
   _parents[to][from] = lbl;
 }
 
-void PathwayTab::getAppropriateEntityNode(const string& entity, 
+void PathwayTab::getAppropriateEntityNode(const string& entity,
 					  const string& species,
 					  Node& out_node) {
   out_node.first = entity;
@@ -276,17 +284,17 @@ void PathwayTab::getAppropriateEntityNode(const string& entity,
   }
 }
 
-void PathwayTab::addFactorGenerator(const string& entity_type, 
+void PathwayTab::addFactorGenerator(const string& entity_type,
 				    const string& node_type,
 				    FactorGenerator* factor_gen) {
   pair< string, string > entry(entity_type, node_type);
   _factorGenLookup[entry] = factor_gen;
-}			  
+}
 
 void PathwayTab::printNodeMap(ostream& to, const string& prefix) {
   for (size_t i = 0; i < _nodevector.size(); ++i) {
-    to << prefix << i 
-       << '\t' << _nodevector[i].first 
+    to << prefix << i
+       << '\t' << _nodevector[i].first
        << '\t' << _nodevector[i].second << endl;
   }
 }
@@ -345,7 +353,7 @@ void PathwayTab::printDaiFactorSection(ostream& to) {
       total_dimension *= VARIABLE_DIMENSION;
     }
     to << endl;
-    
+
     vector< Real > factor_vals;
     factor_vals.reserve(total_dimension);
     _defaultFactorGen->generateValues(edge_types, factor_vals);
@@ -359,7 +367,7 @@ void PathwayTab::printDaiFactorSection(ostream& to) {
 void PathwayTab::splitNodeParents(const Node& n, const size_t maxParents) {
   map< Node, map< Node, string > >::iterator pmap_i = _parents.find(n);
   assert(pmap_i != _parents.end());
-  unsigned int numNodes = (pmap_i->second.size() / maxParents) 
+  unsigned int numNodes = (pmap_i->second.size() / maxParents)
     + (pmap_i->second.size() % maxParents > 0);
   if (numNodes > maxParents) {numNodes = maxParents;}
   if (numNodes > 1) {
@@ -374,7 +382,7 @@ void PathwayTab::splitNodeParents(const Node& n, const size_t maxParents) {
       newNodes.push_back(newNode);
       addEntity(newNode.first, "node_split");
     }
-    
+
     // Step 2 of 4: connect parents to intermediate nodes
     map< Node, string >::iterator parent_i = pmap_i->second.begin();
     for (int nodeIndex = 0; parent_i != pmap_i->second.end(); ++parent_i) {
@@ -401,7 +409,7 @@ void PathwayTab::splitHighInDegree(const int maxParents) {
     splitNodeParents(*i, maxParents);
   }
 }
-void PathwayTab::generateFactorValues(const Node& child, 
+void PathwayTab::generateFactorValues(const Node& child,
 				      const vector< string >& edge_types,
 				      vector< Real >& outValues) const {
   /// \todo make this polymorphic based on the entity type and node sub-type
@@ -439,7 +447,7 @@ PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
   for ( ; child_iter != _parents.end(); ++child_iter) {
     const Node& child_node = child_iter->first;
     const map< Node, string >& pmap = child_iter->second;
-    
+
     if (pmap.size() == 0) {
       continue;
     }
@@ -461,19 +469,19 @@ PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
       edge_types.push_back(edge_type);
       total_dimension *= VARIABLE_DIMENSION;
     }
-    
+
     vector< Real > factor_vals;
     factor_vals.reserve(total_dimension);
     generateFactorValues(child_node, edge_types, factor_vals);
     assert(factor_vals.size() == total_dimension);
-    
+
     Factor f(factor_vars, factor_vals);
     outFactors.push_back(f);
 
     for (size_t i = 0; i < sp.size(); ++i) {
       map< string, SmallSet<string> >::const_iterator jit = sp[i].begin();
       for(size_t j = 0; j < sp[i].size(); ++j, ++jit) {
-	SmallSet< string > eset(edge_types.begin(), edge_types.end(), 
+	SmallSet< string > eset(edge_types.begin(), edge_types.end(),
 				edge_types.size());
 	const string& spec_subtype = jit->first;
 	const string& node_subtype = child_node.second;
@@ -507,7 +515,7 @@ PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
     RunConfiguration::EMStep::const_iterator spec_iterator = sp[i].begin();
     for (size_t j = 0; j < var_orders[i].size(); ++j, ++spec_iterator) {
       if (var_orders[i][j].size() == 0) {
-	cerr << "!! Did not find any variables of sub-type '" 
+	cerr << "!! Did not find any variables of sub-type '"
 	     << spec_iterator->first << "' with incoming edges matching: "
 	     << endl;
 	SmallSet< string >::const_iterator it = spec_iterator->second.begin();
@@ -526,7 +534,7 @@ PathwayTab::constructFactors(const RunConfiguration::EMSteps& sp,
     if (spvec.size() > 0) {
       outMsteps.push_back(MaximizationStep(spvec));
     } else {
-      cerr << "!! em_step number " << i 
+      cerr << "!! em_step number " << i
 	   << " had no matching nodes in the pathway" << endl;
     }
   }
@@ -549,8 +557,8 @@ void PathwayTab::dumpNodeIndexMap() const {
     const Node& n = i->first;
     size_t idx = i->second;
     const Node& nv = _nodevector[idx];
-    cerr << idx << '\t' 
-	 << n.first << '\t' << n.second << '\t' 
+    cerr << idx << '\t'
+	 << n.first << '\t' << n.second << '\t'
 	 << nv.first << '\t' << nv.second << endl;
   }
 }

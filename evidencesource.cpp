@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #include <fstream>
 
 #include "common.h"
@@ -5,7 +13,7 @@
 
 #define THROW(msg) throw std::runtime_error(msg)
 
-EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params() 
+EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params()
 {
   _params.reserve(9);
   if (p.hasKey("factorParams")) {
@@ -33,7 +41,7 @@ EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params()
   Real minor = epsilon / 2;
   Real major0 = 1 - epsilon0;
   Real minor0 = epsilon0 / 2;
-  
+
   bool flip = false;
   if (p.hasKey("reverse")) {
     if (p.getStringAs<string>("reverse") == "true") {
@@ -49,7 +57,7 @@ EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params()
     _params.push_back(minor);
     _params.push_back(minor0);
     _params.push_back(major);
- 
+
     _params.push_back(minor);
     _params.push_back(major0);
     _params.push_back(minor);
@@ -61,18 +69,18 @@ EvidenceFactorGen::EvidenceFactorGen(const PropertySet& p) : _params()
     _params.push_back(major);
     _params.push_back(minor0);
     _params.push_back(minor);
-    
+
     _params.push_back(minor);
     _params.push_back(major0);
     _params.push_back(minor);
-    
+
     _params.push_back(minor);
     _params.push_back(minor0);
     _params.push_back(major);
   }
 }
 
-void EvidenceFactorGen::generateValues(const vector< string >& edge_types, 
+void EvidenceFactorGen::generateValues(const vector< string >& edge_types,
 		      vector< Real >& outVals) const
 {
   assert(edge_types.size() == 1);
@@ -81,10 +89,10 @@ void EvidenceFactorGen::generateValues(const vector< string >& edge_types,
   }
 }
 
-EvidenceSource::EvidenceSource(PropertySet &p, string base) : 
+EvidenceSource::EvidenceSource(PropertySet &p, string base) :
   cutoffs(),
   options(p),
-  attachPoint(), 
+  attachPoint(),
   _evidenceFile()
 {
   if (p.hasKey("disc"))
@@ -142,9 +150,9 @@ double stringToDouble(const string& s) {
   return result;
 }
 
-void EvidenceSource::loadFromFile(PathwayTab& p, 
-				  map<string, size_t>& sampleMap, 
-				  vector<Evidence::Observation>& sampleData) 
+void EvidenceSource::loadFromFile(PathwayTab& p,
+				  map<string, size_t>& sampleMap,
+				  vector<Evidence::Observation>& sampleData)
 {
   ifstream infile;
   infile.open( _evidenceFile.c_str() );
@@ -169,7 +177,7 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
 
     FactorGenerator* fgen = new EvidenceFactorGen(options);
     p.addFactorGenerator("protein", _suffix, fgen);
-    
+
     while(getline(infile,line)) {
       vector<string> vals;
       Tokenize(line,vals,"\t");
@@ -179,7 +187,7 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
       string sample = vals[0];
       _sampleNames.push_back(sample);
       vals.erase(vals.begin());
-      
+
       for(size_t i = 0; i < vals.size(); i++) {
 	if(p.getEntityType(header[i]) != "protein") // skip adding evidence if it's not in the pathway
 	  continue;
@@ -220,4 +228,3 @@ void Tokenize(const string& str,
       pos = str.find_first_of(delimiters, lastPos);
     }
 }
-

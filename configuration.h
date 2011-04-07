@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #ifndef HEADER_CONFIGURATION_H
 #define HEADER_CONFIGURATION_H
 
@@ -11,7 +19,7 @@
 
 using namespace dai;
 
-class RunConfiguration 
+class RunConfiguration
 {
 public:
   static const std::string INFERENCE_CONF_TOKEN;
@@ -31,7 +39,7 @@ private:
   EMSteps _emsteps;
   PropertySet _em;
   PropertySet _path;
-  
+
 public:
 
   /// Default constructor
@@ -40,8 +48,8 @@ public:
   }
 
   /// Copy constructor
-  RunConfiguration(const RunConfiguration &x) : 
-    _inferences(x._inferences), 
+  RunConfiguration(const RunConfiguration &x) :
+    _inferences(x._inferences),
     _evidences(x._evidences),
     _emsteps(x._emsteps),
     _em(x._em),
@@ -59,7 +67,7 @@ public:
     }
     return *this;
   }
-  
+
   /// Useful constructor
   RunConfiguration(const std::string& configure_filename);
 
@@ -70,11 +78,11 @@ public:
   PropertySet& evidence(size_t i);
 
   PropertySet& pathwayProps() {return _path;}
-  
+
   size_t evidenceSize();
-  
+
   const PropertySet& emProps() { return _em; }
-  
+
   const EMSteps emSteps() const {return _emsteps;}
 };
 

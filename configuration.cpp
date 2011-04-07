@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #include "configuration.h"
 
 const std::string RunConfiguration::INFERENCE_CONF_TOKEN("inference");
@@ -16,8 +24,8 @@ RunConfiguration::RunConfiguration(const std::string& configure_filename)
   addConfigurations(is);
 }
 
-PropertySet& 
-RunConfiguration::getInferenceProperties(const std::string& pathway_filename) 
+PropertySet&
+RunConfiguration::getInferenceProperties(const std::string& pathway_filename)
 {
   for (size_t i = 0; i < _inferences.size(); i++)
     {

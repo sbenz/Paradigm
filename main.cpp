@@ -1,3 +1,11 @@
+/********************************************************************************/
+/* Copyright 2009-2011 -- The Regents of the University of California           */
+/* This code is provided for research purposes to scientists at non-profit		*/
+/*  organizations.  All other use is strictly prohibited.  For further			*/
+/*  details please contact University of California, Santa Cruz or				*/
+/*	Five3 Genomics, LLC (http://five3genomics.com).								*/
+/********************************************************************************/
+
 #include <getopt.h>
 #include <iostream>
 #include <fstream>
@@ -23,9 +31,9 @@ using namespace dai;
 
 void print_usage(int signal)
 {
-  cerr << "paradigm" 
+  cerr << "paradigm"
 #ifdef VERSION
-       << " -- " << VERSION 
+       << " -- " << VERSION
 #endif
        << endl
        << "Usage:" << endl
@@ -39,17 +47,17 @@ void print_usage(int signal)
   exit(signal);
 }
 
-void die(string msg) 
+void die(string msg)
 {
   cerr << msg << endl;
   exit(-1);
 }
 
-inline double log10odds(double post,double prior) 
-{ 
-  return std::log( ( post / (1.0 - post) ) 
-		   / ( prior / (1.0 - prior) ) ) 
-    / log(10); 
+inline double log10odds(double post,double prior)
+{
+  return std::log( ( post / (1.0 - post) )
+		   / ( prior / (1.0 - prior) ) )
+    / log(10);
 }
 
 // returns a map of all the nodes in a single subnet, for testing against
@@ -83,13 +91,13 @@ map< long, bool > nodesInSingleNet(vector< Factor > factors)
 			if(!nodesSeen[varLabel2])
 			{
 			  nodesToCheck.push_back(varLabel2);
-			  nodesSeen[varLabel2] = true;  
+			  nodesSeen[varLabel2] = true;
 			}
-		  }		  
+		  }
 		}
-	  }	
+	  }
 	}
-	
+
   }
   return nodesSeen;
 }
@@ -99,7 +107,7 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 			      ostream& out)
 {
   out << "> " << sampleName;
-  out << " loglikelihood=" << (sample->logZ() - prior->logZ()) 
+  out << " loglikelihood=" << (sample->logZ() - prior->logZ())
        << endl;
   for (size_t i = 0; i < fg.nrVars(); ++i)
     {
@@ -112,7 +120,7 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
       vector<double> priors;
       vector<double> posteriors;
       bool beliefEqualOne = false;
-      
+
       for (size_t j = 0; j < belief.nrStates(); ++j)
 	{
 	  if(belief[j] == 1 || priorBelief[j] == 1)
@@ -128,16 +136,16 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 	out << "NA";
       else
 	{
-	  double down = log10odds(posteriors[0],priors[0]); 
-	  double nc = log10odds(posteriors[1],priors[1]); 
-	  double up = log10odds(posteriors[2],priors[2]); 
-	  
-	  if (nc > down && nc > up) 
+	  double down = log10odds(posteriors[0],priors[0]);
+	  double nc = log10odds(posteriors[1],priors[1]);
+	  double up = log10odds(posteriors[2],priors[2]);
+
+	  if (nc > down && nc > up)
 	    out << "0";
 	  else if (down > up)
 	    out << (-1.0*down);
 	  else
-	    out << up;				
+	    out << up;
 	}
       out << endl;
     }
@@ -145,14 +153,14 @@ void outputFastaPerturbations(string sampleName, InfAlg* prior, InfAlg* sample,
 
 void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway,
 			    const vector< vector < SharedParameters::FactorOrientations > > &var_orders) {
-  out << "> em_iters=" << em.Iterations() 
+  out << "> em_iters=" << em.Iterations()
       << " logZ=" << em.logZ() << endl;
   size_t i = 0;
   for (EMAlg::s_iterator m = em.s_begin(); m != em.s_end(); ++m, ++i) {
     size_t j = 0;
-    for (MaximizationStep::iterator pit = m->begin(); pit != m->end(); 
+    for (MaximizationStep::iterator pit = m->begin(); pit != m->end();
 	 ++pit, ++j) {
-      SharedParameters::FactorOrientations::const_iterator fo 
+      SharedParameters::FactorOrientations::const_iterator fo
 	= var_orders[i][j].begin();
       const vector< Var >& vars  = fo->second;
       Permute perm(fo->second);
@@ -165,7 +173,7 @@ void outputEmInferredParams(ostream& out, EMAlg& em, PathwayTab& pathway,
 	if (vi == 0) {
 	  out << "> child='"<< pathway.getNode(vars[vi].label()).second << "'";
 	} else {
-	  out << " edge" << vi << "='" 
+	  out << " edge" << vi << "='"
 	      << pathway.getInteraction(vars[0].label(), vars[vi].label())
 	      << '\'';
 	}
@@ -213,7 +221,7 @@ int main(int argc, char *argv[])
     { NULL, 0, NULL, 0 }
   };
   int next_options;
-  
+
   string pathwayFilename;
   string batchPrefix;
   string configFile;
@@ -295,14 +303,14 @@ int main(int argc, char *argv[])
       cerr << "Parsing evidence file: " << e.evidenceFile() << endl;
     e.loadFromFile(pathway, sampleMap, sampleData);
     evid.push_back(e);
-    if (i > 0 && e.sampleNames() != evid[0].sampleNames()) 
+    if (i > 0 && e.sampleNames() != evid[0].sampleNames())
       {
-	die("Sample names differ in files " + e.evidenceFile() + " and " 
+	die("Sample names differ in files " + e.evidenceFile() + " and "
 	    + evid[0].evidenceFile());
       }
   }
   if(VERBOSE)
-    cerr << "Added evidence for " << evid[0].sampleNames().size() 
+    cerr << "Added evidence for " << evid[0].sampleNames().size()
 	 << " samples" << endl;
 
   // /////////////////////////////////////////////////
@@ -312,7 +320,7 @@ int main(int argc, char *argv[])
   vector< vector < SharedParameters::FactorOrientations > > var_orders;
   var_orders = pathway.constructFactors(conf.emSteps(), factors, msteps);
   map< long, string > outNodes = pathway.getOutputNodeMap();
-  
+
   // add in additional factors to link disconnected pieces of the pathway
   FactorGraph *testGraphConnected = new FactorGraph(factors);
   while(!testGraphConnected->isConnected())
@@ -332,23 +340,23 @@ int main(int argc, char *argv[])
 	if(!nodesInSubNet[varLabel])
 	  {
 	    I_vars |= Var(varLabel, PathwayTab::VARIABLE_DIMENSION);
-	    
+
 	    factors.push_back( Factor( I_vars, 1.0 ) );
 	    addedLink = true;
 	  }
-      }	
+      }
     }
     break;
     delete testGraphConnected;
     testGraphConnected = new FactorGraph(factors);
   }
   delete testGraphConnected;
-  
+
   FactorGraph priorFG(factors);
 
   PropertySet inferenceOptions = conf.getInferenceProperties(pathwayFilename);
   std::string method = inferenceOptions.getAs<std::string>("method");
-  
+
   InfAlg* prior = newInfAlg(method, priorFG, inferenceOptions);
   prior->init();
 
@@ -371,7 +379,7 @@ int main(int argc, char *argv[])
     outputEmInferredParams(paramsOutputStream, em, pathway, var_orders);
   }
   prior->run();
-  
+
   // /////////////////////////////////////////////////
   // Run inference on each of the samples
   map<string, size_t>::iterator sample_iter = sampleMap.begin();
@@ -383,8 +391,8 @@ int main(int argc, char *argv[])
     }
     clamped->init();
     clamped->run();
-    
-    outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG, 
+
+    outputFastaPerturbations(sample_iter->first, prior, clamped, priorFG,
 			     outNodes, *outstream);
 
     delete clamped;
