@@ -1,5 +1,5 @@
 = PARADIGM =
-== PAthway Representation and Analysis by Direct Reference on Graphical Models ==
+== PAthway Representation and Analysis by Direct Inference on Graphical Models ==
 
 Developed by Charles Vaske & Steve Benz
 
