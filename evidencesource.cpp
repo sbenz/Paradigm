@@ -188,7 +188,7 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
       _sampleNames.push_back(sample);
       vals.erase(vals.begin());
 
-      for(size_t i = 0; i < vals.size(); i++) {
+      for(size_t i = 0, var_idx = 0; i < vals.size(); i++) {
 	if(p.getEntityType(header[i]) != "protein") // skip adding evidence if it's not in the pathway
 	  continue;
 	if(strcmp(vals[i].c_str(),"NA")==0)
@@ -200,7 +200,7 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
 	  sampleData.push_back(Evidence::Observation());
 	}
 	size_t sample_idx = sampleMap[sample];
-	sampleData[sample_idx][vars[i]] = discCutoffs(evidence);
+	sampleData[sample_idx][vars[var_idx++]] = discCutoffs(evidence);
       }
     }
     infile.close();
