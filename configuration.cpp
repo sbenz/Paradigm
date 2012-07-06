@@ -60,8 +60,7 @@ RunConfiguration::addConfigurations(std::istream& is)
 	std::set<PropertyKey>::iterator i = keys.begin();
 	EMStep e;
 	for ( ; i != keys.end(); ++i) {
-	  std::vector< std::string > edges;
-	  tokenizeString(conf.getAs<std::string>(*i), edges, ";");
+	  std::vector< std::string > edges = tokenizeString(conf.getAs<std::string>(*i), true, ";");
 	  SmallSet< std::string > s(edges.begin(), edges.end(), edges.size());
 	  e[*i] = s;
 	}
