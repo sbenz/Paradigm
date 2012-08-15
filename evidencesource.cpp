@@ -191,8 +191,10 @@ void EvidenceSource::loadFromFile(PathwayTab& p,
       for(size_t i = 0, var_idx = 0; i < vals.size(); i++) {
 	if(p.getEntityType(header[i]) != "protein") // skip adding evidence if it's not in the pathway
 	  continue;
-	if(strcmp(vals[i].c_str(),"NA")==0)
+	if(strcmp(vals[i].c_str(),"NA")==0) {
+      ++var_idx;
 	  continue;
+    }
 
 	double evidence = stringToDouble(vals[i]);
 	if (sampleMap.count(sample) == 0) {
