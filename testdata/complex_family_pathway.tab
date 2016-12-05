@@ -1,0 +1,13 @@
+abstract	ABS
+complex	COM
+family	FAM
+protein	FAM1
+protein	FAM2
+protein	PROT1
+protein	PROT2
+FAM1	FAM	member>
+FAM2	FAM	member>
+FAM	COM	member>
+PROT1	COM	member>
+PROT2	ABS	-a>
+COM	ABS	-a>

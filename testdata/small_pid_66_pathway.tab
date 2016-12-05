@@ -1,0 +1,313 @@
+protein	LPAR3
+protein	LPAR2
+protein	HBEGF
+protein	ARHGEF1
+protein	LPAR1
+protein	ADCY4
+protein	UniProt:Q5VWL0
+protein	TRIP6
+protein	SLC9A3R2
+protein	GNA13
+protein	PTK2B
+protein	GAB1
+protein	TIAM1
+protein	ADCY1
+protein	ADCY2
+protein	UniProt:Q05655
+protein	PTK2
+protein	RELA
+protein	GNA12
+protein	PRKCE
+protein	PLCB3
+protein	GNAI1
+protein	RAC1
+protein	GNB1
+protein	RHOA
+protein	GNG2
+protein	UniProt:P56945
+protein	ADCY7
+protein	GNAQ
+protein	GSK3B
+protein	PXN
+protein	CASP3
+protein	PIK3CB
+protein	ADCY8
+protein	AKT1
+protein	UniProt:P30679
+protein	GNA11
+protein	UniProt:P29777
+protein	PIK3R1
+protein	NFKBIA
+protein	NFKB1
+protein	PLCG1
+protein	GNAZ
+protein	UniProt:P14780
+protein	SRC
+protein	MAPT
+protein	MAPT2
+protein	MAPT3
+family	MAPT_Family
+protein	IL8
+protein	GNAO1
+protein	GNAI3
+protein	MMP2
+protein	LYN
+protein	JUN
+protein	GNAI2
+protein	HRAS
+protein	FOS
+protein	EGFR
+protein	GNA14
+protein	ADCY5
+protein	ADCY9
+protein	ADCY3
+protein	ADCY6
+protein	PLD2
+complex	TRIP6/p130 Cas/FAK1/Paxillin
+complex	Rac1/GTP
+complex	Rac1/GDP
+complex	PI3K-beta
+complex	NF kappa B1 p50/RelA/I kappa B alpha
+complex	NF kappa B1 p50/RelA
+complex	LPA/LPA3
+complex	LPA/LPA2/NHERF2
+complex	LPA/LPA2/MAGI-3
+complex	LPA/LPA2
+complex	LPA/LPA1-2-3
+complex	LPA/LPA1
+complex	HRAS/GTP
+complex	HRAS/GDP
+complex	HB-EGF/EGFR
+complex	Gi(beta/gamma)
+complex	GNB1/GNG2
+complex	G12/G13
+complex	EGFR/PI3K-beta/Gab1
+complex	AP1
+chemical	mol:PIP3
+chemical	mol:LPA
+chemical	mol:IP3
+chemical	mol:GTP
+chemical	mol:GDP
+chemical	mol:DAG
+chemical	mol:Ca2+
+chemical	mol:Ca ++
+abstract	stress fiber formation
+abstract	positive regulation of mitosis
+abstract	positive regulation of microtubule depolymerization
+abstract	positive regulation of dendritic cell cytokine production
+abstract	lamellipodium assembly
+abstract	endothelial cell migration
+abstract	contractile ring contraction involved in cytokinesis
+abstract	cell migration
+abstract	cAMP biosynthetic process
+abstract	arachidonic acid secretion
+abstract	apoptosis
+abstract	MAPKKK cascade
+abstract	JNK cascade
+mol:LPA	LPA/LPA3	component>
+mol:LPA	LPA/LPA2/NHERF2	component>
+mol:LPA	LPA/LPA2/MAGI-3	component>
+mol:LPA	LPA/LPA2	component>
+mol:LPA	LPA/LPA1-2-3	component>
+mol:LPA	LPA/LPA1	component>
+mol:IP3	mol:Ca2+	-a>
+mol:GTP	Rac1/GTP	component>
+mol:GTP	HRAS/GTP	component>
+mol:GDP	Rac1/GDP	component>
+mol:GDP	HRAS/GDP	component>
+mol:DAG	UniProt:Q05655	-a>
+mol:Ca2+	PTK2B	-a>
+mol:Ca ++	PTK2B	-a>
+LPAR3	LPA/LPA3	component>
+LPAR3	LPA/LPA1-2-3	component>
+LPAR2	LPA/LPA2/NHERF2	component>
+LPAR2	LPA/LPA2/MAGI-3	component>
+LPAR2	LPA/LPA2	component>
+LPAR2	LPA/LPA1-2-3	component>
+HBEGF	HB-EGF/EGFR	component>
+ARHGEF1	RHOA	-a>
+LPAR1	LPA/LPA1-2-3	component>
+LPAR1	LPA/LPA1	component>
+ADCY4	cAMP biosynthetic process	-ap|
+UniProt:Q5VWL0	LPA/LPA2/MAGI-3	component>
+TRIP6	TRIP6/p130 Cas/FAK1/Paxillin	component>
+SLC9A3R2	LPA/LPA2/NHERF2	component>
+GNA13	G12/G13	component>
+PTK2B	GSK3B	-a>
+PTK2B	PXN	-a>
+GAB1	EGFR/PI3K-beta/Gab1	component>
+TIAM1	RHOA	-a|
+TIAM1	Rac1/GTP	-a>
+ADCY1	cAMP biosynthetic process	-ap|
+ADCY2	cAMP biosynthetic process	-ap|
+UniProt:Q05655	NFKBIA	-a>
+UniProt:Q05655	LYN	-a>
+UniProt:Q05655	NF kappa B1 p50/RelA	-a>
+PTK2	PXN	-a>
+PTK2	TRIP6/p130 Cas/FAK1/Paxillin	component>
+RELA	NF kappa B1 p50/RelA/I kappa B alpha	component>
+RELA	NF kappa B1 p50/RelA	component>
+GNA12	G12/G13	component>
+PRKCE	TIAM1	-a>
+PLCB3	mol:IP3	-a>
+PLCB3	mol:DAG	-a>
+GNAI1	ADCY4	-a>
+GNAI1	ADCY1	-a>
+GNAI1	ADCY2	-a>
+GNAI1	ADCY7	-a>
+GNAI1	ADCY8	-a>
+GNAI1	ADCY5	-a>
+GNAI1	ADCY9	-a>
+GNAI1	ADCY3	-a>
+GNAI1	ADCY6	-a>
+GNAI1	HRAS/GTP	-a>
+GNAI1	Gi(beta/gamma)	component>
+RAC1	Rac1/GTP	component>
+RAC1	Rac1/GDP	component>
+GNB1	Gi(beta/gamma)	component>
+GNB1	GNB1/GNG2	component>
+RHOA	contractile ring contraction involved in cytokinesis	-ap>
+RHOA	PI3K-beta	-a>
+GNG2	Gi(beta/gamma)	component>
+GNG2	GNB1/GNG2	component>
+UniProt:P56945	TRIP6/p130 Cas/FAK1/Paxillin	component>
+ADCY7	cAMP biosynthetic process	-ap|
+GNAQ	PLCG1	-a>
+GSK3B	MAPT	-a>
+PXN	stress fiber formation	-ap>
+PXN	TRIP6/p130 Cas/FAK1/Paxillin	component>
+CASP3	apoptosis	-ap>
+PIK3CB	PI3K-beta	component>
+PIK3CB	EGFR/PI3K-beta/Gab1	component>
+ADCY8	cAMP biosynthetic process	-ap|
+UniProt:P30679	PLCG1	-a>
+GNA11	PLCG1	-a>
+UniProt:P29777	ADCY4	-a>
+UniProt:P29777	ADCY1	-a>
+UniProt:P29777	ADCY2	-a>
+UniProt:P29777	ADCY7	-a>
+UniProt:P29777	ADCY8	-a>
+UniProt:P29777	ADCY5	-a>
+UniProt:P29777	ADCY9	-a>
+UniProt:P29777	ADCY3	-a>
+UniProt:P29777	ADCY6	-a>
+UniProt:P29777	HRAS/GTP	-a>
+UniProt:P29777	Gi(beta/gamma)	component>
+PIK3R1	PI3K-beta	component>
+PIK3R1	EGFR/PI3K-beta/Gab1	component>
+NFKBIA	NF kappa B1 p50/RelA/I kappa B alpha	component>
+NFKB1	NF kappa B1 p50/RelA/I kappa B alpha	component>
+NFKB1	NF kappa B1 p50/RelA	component>
+PLCG1	mol:IP3	-a>
+PLCG1	mol:DAG	-a>
+GNAZ	ADCY4	-a>
+GNAZ	ADCY1	-a>
+GNAZ	ADCY2	-a>
+GNAZ	ADCY7	-a>
+GNAZ	ADCY8	-a>
+GNAZ	ADCY5	-a>
+GNAZ	ADCY9	-a>
+GNAZ	ADCY3	-a>
+GNAZ	ADCY6	-a>
+GNAZ	HRAS/GTP	-a>
+GNAZ	Gi(beta/gamma)	component>
+UniProt:P14780	HBEGF	-a>
+SRC	TRIP6	-a>
+MAPT	MAPT_Family	member>
+MAPT2	MAPT_Family	member>
+MAPT3	MAPT_Family	member>
+MAPT_Family	positive regulation of microtubule depolymerization	-ap>
+GNAO1	ADCY4	-a>
+GNAO1	ADCY1	-a>
+GNAO1	ADCY2	-a>
+GNAO1	ADCY7	-a>
+GNAO1	ADCY8	-a>
+GNAO1	ADCY5	-a>
+GNAO1	ADCY9	-a>
+GNAO1	ADCY3	-a>
+GNAO1	ADCY6	-a>
+GNAO1	HRAS/GTP	-a>
+GNAO1	Gi(beta/gamma)	component>
+GNAI3	ADCY4	-a>
+GNAI3	ADCY1	-a>
+GNAI3	ADCY2	-a>
+GNAI3	ADCY7	-a>
+GNAI3	ADCY8	-a>
+GNAI3	ADCY5	-a>
+GNAI3	ADCY9	-a>
+GNAI3	ADCY3	-a>
+GNAI3	ADCY6	-a>
+GNAI3	HRAS/GTP	-a>
+GNAI3	Gi(beta/gamma)	component>
+MMP2	endothelial cell migration	-ap>
+JUN	AP1	component>
+GNAI2	ADCY4	-a>
+GNAI2	ADCY1	-a>
+GNAI2	ADCY2	-a>
+GNAI2	ADCY7	-a>
+GNAI2	ADCY8	-a>
+GNAI2	ADCY5	-a>
+GNAI2	ADCY9	-a>
+GNAI2	ADCY3	-a>
+GNAI2	ADCY6	-a>
+GNAI2	HRAS/GTP	-a>
+GNAI2	Gi(beta/gamma)	component>
+HRAS	HRAS/GTP	component>
+HRAS	HRAS/GDP	component>
+FOS	AP1	component>
+EGFR	HB-EGF/EGFR	component>
+EGFR	EGFR/PI3K-beta/Gab1	component>
+GNA14	PLCG1	-a>
+ADCY5	cAMP biosynthetic process	-ap|
+ADCY9	cAMP biosynthetic process	-ap|
+ADCY3	cAMP biosynthetic process	-ap|
+ADCY6	cAMP biosynthetic process	-ap|
+TRIP6/p130 Cas/FAK1/Paxillin	cell migration	-ap>
+Rac1/GTP	lamellipodium assembly	-ap>
+Rac1/GTP	cell migration	-ap>
+PI3K-beta	TIAM1	-a>
+PI3K-beta	AKT1	-a>
+NF kappa B1 p50/RelA	IL8	-t>
+LPA/LPA3	GNAQ	-a>
+LPA/LPA3	CASP3	-a>
+LPA/LPA3	UniProt:P30679	-a>
+LPA/LPA3	GNA11	-a>
+LPA/LPA3	GNA14	-a>
+LPA/LPA2/NHERF2	PLCB3	-a>
+LPA/LPA2/MAGI-3	RHOA	-a>
+LPA/LPA2	TRIP6	-a>
+LPA/LPA2	PTK2B	-a>
+LPA/LPA2	GNAQ	-a>
+LPA/LPA2	UniProt:P30679	-a>
+LPA/LPA2	GNA11	-a>
+LPA/LPA2	GNA14	-a>
+LPA/LPA1-2-3	positive regulation of dendritic cell cytokine production	-ap>
+LPA/LPA1-2-3	PTK2	-a>
+LPA/LPA1-2-3	NFKBIA	-a>
+LPA/LPA1-2-3	IL8	-a>
+LPA/LPA1-2-3	LYN	-a>
+LPA/LPA1-2-3	PLD2	-a>
+LPA/LPA1-2-3	NF kappa B1 p50/RelA	-a>
+LPA/LPA1-2-3	EGFR/PI3K-beta/Gab1	-a>
+LPA/LPA1-2-3	AP1	-a>
+LPA/LPA1	PTK2B	-a>
+LPA/LPA1	GNAI1	-a>
+LPA/LPA1	CASP3	-a>
+LPA/LPA1	UniProt:P29777	-a>
+LPA/LPA1	GNAZ	-a>
+LPA/LPA1	GNAO1	-a>
+LPA/LPA1	GNAI3	-a>
+LPA/LPA1	MMP2	-t>
+LPA/LPA1	GNAI2	-a>
+LPA/LPA1	GNB1/GNG2	-a>
+LPA/LPA1	G12/G13	-a>
+JNK cascade	AP1	-ap>
+HRAS/GTP	positive regulation of mitosis	-ap>
+HRAS/GTP	arachidonic acid secretion	-ap>
+HRAS/GTP	MAPKKK cascade	-ap>
+HB-EGF/EGFR	IL8	-t>
+GNB1/GNG2	PI3K-beta	-a>
+GNB1/GNG2	HRAS/GTP	-a>
+G12/G13	ARHGEF1	-a>
+EGFR/PI3K-beta/Gab1	mol:PIP3	-a>
+AP1	IL8	-t>

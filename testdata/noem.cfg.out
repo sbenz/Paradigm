@@ -1,0 +1,107 @@
+> sample_2 loglikelihood=-79.6557
+LPAR3	0
+LPAR2	0
+HBEGF	0
+ARHGEF1	0
+LPAR1	0
+ADCY4	0.760254
+UniProt:Q5VWL0	-0.0209375
+TRIP6	0.835723
+SLC9A3R2	0
+GNA13	0
+PTK2B	0
+GAB1	0
+TIAM1	0
+ADCY1	1.39688
+ADCY2	0.763208
+UniProt:Q05655	0
+PTK2	-1.75615
+RELA	0
+GNA12	2.11483
+PRKCE	0
+PLCB3	0
+GNAI1	1.51421
+RAC1	1.47368
+GNB1	0
+RHOA	0
+GNG2	2.11238
+UniProt:P56945	-9.64327e-17
+ADCY7	0.763208
+GNAQ	0
+GSK3B	0
+PXN	-1.22855
+CASP3	0
+PIK3CB	0
+ADCY8	0.760254
+AKT1	0
+UniProt:P30679	0
+GNA11	0
+UniProt:P29777	0
+PIK3R1	0
+NFKBIA	0
+NFKB1	0
+PLCG1	0
+GNAZ	0
+UniProt:P14780	-0.00426952
+SRC	2.12274
+MAPT	0
+MAPT2	-9.64327e-17
+MAPT3	-9.64327e-17
+MAPT_Family	0.102351
+IL8	0
+GNAO1	0
+GNAI3	0
+MMP2	0
+LYN	0
+JUN	0
+GNAI2	0
+HRAS	0
+FOS	0
+EGFR	1.47652
+GNA14	0
+ADCY5	0.760254
+ADCY9	0.760254
+ADCY3	0.763208
+ADCY6	0.760254
+PLD2	0
+TRIP6/p130 Cas/FAK1/Paxillin	-1.11292
+Rac1/GTP	0
+Rac1/GDP	0.487772
+PI3K-beta	0
+NF kappa B1 p50/RelA/I kappa B alpha	0
+NF kappa B1 p50/RelA	0
+LPA/LPA3	0
+LPA/LPA2/NHERF2	0
+LPA/LPA2/MAGI-3	0
+LPA/LPA2	0
+LPA/LPA1-2-3	0
+LPA/LPA1	0
+HRAS/GTP	0
+HRAS/GDP	0
+HB-EGF/EGFR	0.491956
+Gi(beta/gamma)	0
+GNB1/GNG2	0
+G12/G13	0
+EGFR/PI3K-beta/Gab1	0
+AP1	0
+mol:PIP3	0
+mol:LPA	0
+mol:IP3	0
+mol:GTP	-1.44649e-16
+mol:GDP	1.92865e-16
+mol:DAG	0
+mol:Ca2+	0
+mol:Ca ++	-1.92865e-16
+stress fiber formation	-1.15259
+positive regulation of mitosis	0
+positive regulation of microtubule depolymerization	0.102162
+positive regulation of dendritic cell cytokine production	0
+lamellipodium assembly	0
+endothelial cell migration	0
+contractile ring contraction involved in cytokinesis	0
+cell migration	-0.23747
+cAMP biosynthetic process	-0.782116
+arachidonic acid secretion	0
+apoptosis	0
+MAPKKK cascade	0
+JNK cascade	-0.00428239

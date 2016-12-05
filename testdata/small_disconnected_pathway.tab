@@ -1,0 +1,6 @@
+protein	LPAR3
+protein	LPAR2
+protein	HBEGF
+protein	ARHGEF1
+LPAR3	LPAR2	-a>
+HBEGF	ARHGEF1	-a>
